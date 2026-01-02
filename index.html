@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>socialanxiety.lol</title>
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --dark: #0a0a0a;
+            --gray-900: #111111;
+            --gray-800: #1a1a1a;
+            --gray-700: #222222;
+            --gray-600: #333333;
+            --gray-500: #555555;
+            --gray-400: #777777;
+            --gray-300: #999999;
+            --gray-200: #cccccc;
+            --white: #ffffff;
+            --accent: #ffffff;
+            --shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--gray-900);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-700);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-600);
+        }
+
+        /* Page container */
+        .page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+            z-index: 1;
+        }
+
+        .page.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            z-index: 2;
+        }
+
+        /* Star Background */
+        #starCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* INDEX PAGE */
+        .landing-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .logo-main {
+            font-size: 5rem;
+            font-weight: 900;
+            letter-spacing: -3px;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, var(--white) 0%, var(--gray-300) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-main::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: var(--white);
+            animation: linePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes linePulse {
+            0%, 100% { width: 100px; opacity: 1; }
+            50% { width: 150px; opacity: 0.5; }
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .auth-btn {
+            padding: 1rem 3rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: 2px solid var(--white);
+            background: transparent;
+            color: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-btn:hover {
+            background: var(--white);
+            color: var(--black);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .auth-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .auth-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* LOGIN & SIGNUP PAGES */
+        .auth-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: -60px;
+            left: 0;
+            color: var(--gray-400);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            color: var(--white);
+        }
+
+        .auth-card {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--gray-800);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                var(--white), 
+                transparent);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .auth-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-subtitle {
+            color: var(--gray-400);
+            font-size: 0.9rem;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--gray-300);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--gray-700);
+            border-radius: 10px;
+            color: var(--white);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--gray-400);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--white);
+            color: var(--black);
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-800);
+        }
+
+        .auth-link {
+            color: var(--gray-400);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .auth-link:hover {
+            color: var(--white);
+        }
+
+        .url-preview {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--gray-700);
+            border-radius: 8px;
+            padding: 0.8rem;
+            margin-top: 0.5rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: var(--gray-300);
+        }
+
+        .url-preview span {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        /* DASHBOARD */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--dark);
+            border-right: 1px solid var(--gray-800);
+            padding: 2rem 0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 250px;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 2rem;
+            border-bottom: 1px solid var(--gray-800);
+            margin-bottom: 2rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gray-800);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--gray-600);
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-details h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .user-details p {
+            font-size: 0.85rem;
+            color: var(--gray-400);
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0 1rem;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1rem;
+            color: var(--gray-300);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: var(--gray-800);
+            color: var(--white);
+        }
+
+        .profile-link-card {
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 2rem 1rem 0;
+        }
+
+        .profile-url {
+            font-family: monospace;
+            color: var(--white);
+            font-size: 0.85rem;
+            word-break: break-all;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .content-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        /* Dashboard Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .dashboard-card {
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .dashboard-card:hover {
+            border-color: var(--gray-700);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .card-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* Profile Preview */
+        .profile-preview {
+            border: 1px solid var(--gray-800);
+            border-radius: 15px;
+            overflow: hidden;
+            background: var(--dark);
+        }
+
+        .banner-preview {
+            height: 150px;
+            background: linear-gradient(45deg, var(--gray-800), var(--gray-900));
+            position: relative;
+        }
+
+        .avatar-preview {
+            position: absolute;
+            bottom: -40px;
+            left: 1.5rem;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid var(--dark);
+            background: var(--gray-800);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            padding: 4rem 1.5rem 1.5rem;
+        }
+
+        .username-display {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .bio-display {
+            color: var(--gray-300);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--gray-300);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: var(--dark);
+            border: 1px solid var(--gray-700);
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--gray-400);
+            background: var(--gray-800);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Upload Areas */
+        .upload-area {
+            border: 2px dashed var(--gray-700);
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: var(--gray-500);
+            background: var(--gray-900);
+        }
+
+        .file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Audio Player */
+        .audio-player {
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 15px;
+            padding: 1.5rem;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .play-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--white);
+            color: var(--black);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .play-btn:hover {
+            background: var(--gray-200);
+            transform: scale(1.1);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--white);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--gray-400);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo-main {
+                font-size: 3rem;
+            }
+
+            .auth-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .auth-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Star Background Canvas -->
+    <canvas id="starCanvas"></canvas>
+
+    <!-- INDEX PAGE -->
+    <div id="indexPage" class="page active">
+        <div class="landing-page">
+            <div class="logo-main">
+                <div class="logo-text">socialanxiety.lol</div>
+            </div>
+            <div class="auth-buttons">
+                <button onclick="showPage('login')" class="auth-btn">LOGIN</button>
+                <button onclick="showPage('signup')" class="auth-btn">SIGN UP</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="page">
+        <div class="auth-page">
+            <div class="auth-container">
+                <a href="javascript:void(0)" onclick="showPage('index')" class="back-btn">← BACK</a>
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <div class="auth-logo">socialanxiety.lol</div>
+                        <h1 class="auth-title">Welcome Back</h1>
+                        <p class="auth-subtitle">Sign in to your account</p>
+                    </div>
+
+                    <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label class="form-label">Email or Username</label>
+                            <input type="text" class="form-input" placeholder="Enter your email or username" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-input" placeholder="Enter your password" required>
+                        </div>
+
+                        <button type="submit" class="submit-btn">LOGIN</button>
+                    </form>
+
+                    <div class="auth-footer">
+                        <p>Don't have an account? <a href="javascript:void(0)" onclick="showPage('signup')" class="auth-link">Sign up</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIGNUP PAGE -->
+    <div id="signupPage" class="page">
+        <div class="auth-page">
+            <div class="auth-container">
+                <a href="javascript:void(0)" onclick="showPage('index')" class="back-btn">← BACK</a>
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <div class="auth-logo">socialanxiety.lol</div>
+                        <h1 class="auth-title">Create Account</h1>
+                        <p class="auth-subtitle">Get your personal profile URL</p>
+                    </div>
+
+                    <form class="auth-form" id="signupForm" onsubmit="handleSignup(event)">
+                        <div class="form-group">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-input" id="usernameInput" placeholder="Choose a username" required>
+                            <div class="url-preview">
+                                socialanxiety.lol/<span id="usernamePreview">username</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" placeholder="your@email.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-input" placeholder="Create a password" required>
+                        </div>
+
+                        <button type="submit" class="submit-btn">CREATE ACCOUNT</button>
+                    </form>
+
+                    <div class="auth-footer">
+                        <p>Already have an account? <a href="javascript:void(0)" onclick="showPage('login')" class="auth-link">Login</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div id="dashboardPage" class="page">
+        <div class="dashboard-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userAvatar">
+                            <!-- Avatar will be loaded here -->
+                        </div>
+                        <div class="user-details">
+                            <h3 id="dashboardUsername">Username</h3>
+                            <p id="dashboardEmail">user@email.com</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <ul class="sidebar-nav">
+                    <li><a href="javascript:void(0)" onclick="showDashboardTab('overview')" class="active"><i>📊</i> Overview</a></li>
+                    <li><a href="javascript:void(0)" onclick="showDashboardTab('profile')"><i>👤</i> Edit Profile</a></li>
+                    <li><a href="javascript:void(0)" onclick="showDashboardTab('appearance')"><i>🎨</i> Appearance</a></li>
+                    <li><a href="javascript:void(0)" onclick="showDashboardTab('audio')"><i>🎵</i> Audio</a></li>
+                    <li><a href="javascript:void(0)" onclick="showDashboardTab('settings')"><i>⚙️</i> Settings</a></li>
+                    <li><a href="javascript:void(0)" onclick="handleLogout()"><i>🚪</i> Logout</a></li>
+                </ul>
+                
+                <div class="profile-link-card">
+                    <p style="font-size: 12px; color: #999; margin-bottom: 8px;">Your Profile URL:</p>
+                    <div class="profile-url">
+                        <a href="javascript:void(0)" id="profileLink">socialanxiety.lol/username</a>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Overview Tab -->
+                <div id="overviewTab" class="dashboard-tab">
+                    <div class="content-header">
+                        <h1>Dashboard</h1>
+                        <button class="submit-btn" onclick="viewProfile()">View Profile</button>
+                    </div>
+                    
+                    <!-- Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="profileViews">0</div>
+                            <div class="stat-label">Profile Views</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="audioPlays">0</div>
+                            <div class="stat-label">Audio Plays</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">Profile Complete</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="daysActive">1</div>
+                            <div class="stat-label">Days Active</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Preview -->
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h2>Profile Preview</h2>
+                            </div>
+                            <div class="profile-preview">
+                                <div class="banner-preview" id="previewBanner">
+                                    <!-- Banner will be loaded here -->
+                                </div>
+                                <div class="avatar-preview" id="previewAvatar">
+                                    <!-- Avatar will be loaded here -->
+                                </div>
+                                <div class="profile-info">
+                                    <h3 class="username-display" id="previewUsername">Username</h3>
+                                    <p class="bio-display" id="previewBio">No bio yet</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h2>Audio Player</h2>
+                            </div>
+                            <div class="audio-player" id="audioPlayer">
+                                <div class="player-controls">
+                                    <button class="play-btn" id="playBtn">
+                                        ▶
+                                    </button>
+                                    <div class="track-info">
+                                        <h4 id="trackTitle">No audio uploaded</h4>
+                                        <p id="trackStatus">Upload an MP3 file</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Tab -->
+                <div id="profileTab" class="dashboard-tab" style="display: none;">
+                    <div class="content-header">
+                        <h1>Edit Profile</h1>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <form id="profileForm" onsubmit="updateProfile(event)">
+                            <div class="form-group">
+                                <label for="editUsername">Username</label>
+                                <input type="text" id="editUsername" class="form-control" placeholder="yourusername" required>
+                                <small style="color: #999; display: block; margin-top: 8px;">
+                                    Changing your username will update your profile URL
+                                </small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="editBio">Bio</label>
+                                <textarea id="editBio" class="form-control" rows="4" placeholder="Tell your story..." maxlength="200"></textarea>
+                                <small style="color: #999; display: block; margin-top: 8px;">
+                                    <span id="charCount">0</span>/200 characters
+                                </small>
+                            </div>
+                            
+                            <button type="submit" class="submit-btn">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Appearance Tab -->
+                <div id="appearanceTab" class="dashboard-tab" style="display: none;">
+                    <div class="content-header">
+                        <h1>Appearance</h1>
+                    </div>
+                    
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <h2 style="margin-bottom: 20px;">Profile Banner</h2>
+                            <div class="upload-area" onclick="document.getElementById('bannerInput').click()">
+                                <div style="font-size: 48px; margin-bottom: 20px;">📷</div>
+                                <h3>Upload Banner</h3>
+                                <p>Drag & drop or click to upload</p>
+                                <p style="font-size: 12px; color: #999; margin-top: 8px;">
+                                    Recommended: 1200x300px
+                                </p>
+                                <input type="file" id="bannerInput" accept="image/*" style="display: none;" onchange="uploadBanner(event)">
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-card">
+                            <h2 style="margin-bottom: 20px;">Profile Picture</h2>
+                            <div class="upload-area" onclick="document.getElementById('avatarInput').click()">
+                                <div style="font-size: 48px; margin-bottom: 20px;">👤</div>
+                                <h3>Upload Avatar</h3>
+                                <p>Drag & drop or click to upload</p>
+                                <p style="font-size: 12px; color: #999; margin-top: 8px;">
+                                    Recommended: 200x200px
+                                </p>
+                                <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="uploadAvatar(event)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audio Tab -->
+                <div id="audioTab" class="dashboard-tab" style="display: none;">
+                    <div class="content-header">
+                        <h1>Audio</h1>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <h2 style="margin-bottom: 20px;">Upload MP3</h2>
+                        <div class="upload-area" onclick="document.getElementById('mp3Input').click()">
+                            <div style="font-size: 48px; margin-bottom: 20px;">🎵</div>
+                            <h3>Upload MP3 File</h3>
+                            <p>Drag & drop or click to upload</p>
+                            <p style="font-size: 12px; color: #999; margin-top: 8px;">
+                                Maximum file size: 10MB
+                            </p>
+                            <input type="file" id="mp3Input" accept="audio/mp3,audio/*" style="display: none;" onchange="uploadMP3(event)">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div id="settingsTab" class="dashboard-tab" style="display: none;">
+                    <div class="content-header">
+                        <h1>Settings</h1>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <h2 style="margin-bottom: 20px;">Account Settings</h2>
+                        
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" class="form-control" value="user@email.com" readonly>
+                        </div>
+                        
+                        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #333;">
+                            <h3 style="margin-bottom: 16px; color: #999;">Danger Zone</h3>
+                            <button class="submit-btn" style="background: #dc2626; color: white;" onclick="deleteAccount()">
+                                Delete Account
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Page Management
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show requested page
+            document.getElementById(pageId + 'Page').classList.add('active');
+            
+            // Update browser URL without .html
+            history.pushState({page: pageId}, '', `/${pageId === 'index' ? '' : pageId}`);
+        }
+
+        // Dashboard Tab Management
+        function showDashboardTab(tabId) {
+            // Update active nav item
+            document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Hide all tabs
+            document.querySelectorAll('.dashboard-tab').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Show requested tab
+            document.getElementById(tabId + 'Tab').style.display = 'block';
+        }
+
+        // Form Handlers
+        function handleLogin(e) {
+            e.preventDefault();
+            // Simulate login
+            localStorage.setItem('user', JSON.stringify({
+                username: 'demo',
+                email: 'demo@socialanxiety.lol'
+            }));
+            showPage('dashboard');
+            loadDashboardData();
+        }
+
+        function handleSignup(e) {
+            e.preventDefault();
+            const username = document.getElementById('usernameInput').value;
+            // Simulate signup
+            localStorage.setItem('user', JSON.stringify({
+                username: username,
+                email: 'new@socialanxiety.lol'
+            }));
+            showPage('dashboard');
+            loadDashboardData();
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('user');
+            showPage('index');
+        }
+
+        function updateProfile(e) {
+            e.preventDefault();
+            const username = document.getElementById('editUsername').value;
+            const bio = document.getElementById('editBio').value;
+            
+            // Update preview
+            document.getElementById('previewUsername').textContent = username;
+            document.getElementById('previewBio').textContent = bio || 'No bio yet';
+            document.getElementById('dashboardUsername').textContent = username;
+            document.getElementById('profileLink').textContent = `socialanxiety.lol/${username}`;
+            
+            // Update character count
+            document.getElementById('charCount').textContent = bio.length;
+            
+            alert('Profile updated!');
+        }
+
+        function uploadBanner(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const banner = document.getElementById('previewBanner');
+                    banner.style.backgroundImage = `url(${e.target.result})`;
+                    banner.style.backgroundSize = 'cover';
+                    banner.style.backgroundPosition = 'center';
+                }
+                reader.readAsDataURL(file);
+                alert('Banner uploaded!');
+            }
+        }
+
+        function uploadAvatar(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatar = document.getElementById('previewAvatar');
+                    avatar.innerHTML = `<img src="${e.target.result}" alt="Avatar">`;
+                    
+                    const userAvatar = document.getElementById('userAvatar');
+                    userAvatar.innerHTML = `<img src="${e.target.result}" alt="Avatar">`;
+                }
+                reader.readAsDataURL(file);
+                alert('Avatar uploaded!');
+            }
+        }
+
+        function uploadMP3(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('trackTitle').textContent = file.name.replace('.mp3', '');
+                document.getElementById('trackStatus').textContent = 'Ready to play';
+                alert('MP3 uploaded!');
+            }
+        }
+
+        function viewProfile() {
+            const username = document.getElementById('dashboardUsername').textContent;
+            alert(`Your profile URL: socialanxiety.lol/${username}\n\nThis would open your public profile in a real app.`);
+        }
+
+        function deleteAccount() {
+            if (confirm('Are you sure you want to delete your account? This cannot be undone.')) {
+                localStorage.removeItem('user');
+                showPage('index');
+                alert('Account deleted.');
+            }
+        }
+
+        // Load dashboard data
+        function loadDashboardData() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+                document.getElementById('dashboardUsername').textContent = user.username;
+                document.getElementById('dashboardEmail').textContent = user.email;
+                document.getElementById('editUsername').value = user.username;
+                document.getElementById('previewUsername').textContent = user.username;
+                document.getElementById('profileLink').textContent = `socialanxiety.lol/${user.username}`;
+                document.getElementById('usernamePreview').textContent = user.username;
+                
+                // Update URL preview in signup
+                document.getElementById('usernameInput').addEventListener('input', function(e) {
+                    document.getElementById('usernamePreview').textContent = e.target.value || 'username';
+                });
+                
+                // Bio character count
+                document.getElementById('editBio').addEventListener('input', function(e) {
+                    document.getElementById('charCount').textContent = e.target.value.length;
+                });
+            }
+        }
+
+        // Star Background Animation
+        function initStars() {
+            const canvas = document.getElementById('starCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            
+            class Star {
+                constructor() {
+                    this.reset();
+                }
+                
+                reset() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * -100;
+                    this.size = Math.random() * 2 + 1;
+                    this.speed = Math.random() * 2 + 1;
+                    this.opacity = Math.random() * 0.5 + 0.3;
+                }
+                
+                update() {
+                    this.y += this.speed;
+                    this.x += Math.sin(this.y * 0.01) * 0.5;
+                    
+                    if (this.y > canvas.height) {
+                        this.reset();
+                        this.y = -10;
+                    }
+                }
+                
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                    ctx.fill();
+                    
+                    // Glow effect
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity * 0.3})`;
+                    ctx.fill();
+                }
+            }
+            
+            const stars = [];
+            const starCount = Math.min(100, Math.floor(window.innerWidth / 20));
+            
+            for (let i = 0; i < starCount; i++) {
+                stars.push(new Star());
+            }
+            
+            function animate() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                stars.forEach(star => {
+                    star.update();
+                    star.draw();
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+
+        // Browser Back/Forward Handling
+        window.addEventListener('popstate', function(event) {
+            const page = event.state ? event.state.page : 'index';
+            showPage(page);
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initStars();
+            loadDashboardData();
+            
+            // Check if user is logged in
+            const user = localStorage.getItem('user');
+            if (user && window.location.pathname === '/') {
+                showPage('dashboard');
+            }
+            
+            // Update signup username preview
+            const usernameInput = document.getElementById('usernameInput');
+            if (usernameInput) {
+                usernameInput.addEventListener('input', function(e) {
+                    document.getElementById('usernamePreview').textContent = e.target.value || 'username';
+                });
+            }
+            
+            // Update bio character count
+            const editBio = document.getElementById('editBio');
+            if (editBio) {
+                editBio.addEventListener('input', function(e) {
+                    document.getElementById('charCount').textContent = e.target.value.length;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
