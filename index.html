@@ -3,132 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>socialanxiety.lol - Connect</title>
+    <title>socialanxiety.lol</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-</head>
-<body>
-    <!-- Star Background -->
-    <canvas id="starCanvas"></canvas>
-    
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <a href="/" class="logo">
-                    <i class="fas fa-brain logo-icon"></i>
-                    socialanxiety.lol
-                </a>
-                <nav class="nav">
-                    <a href="/" class="nav-link active">Home</a>
-                    <a href="#features" class="nav-link">Features</a>
-                    <a href="#about" class="nav-link">About</a>
-                    <div id="authButtons">
-                        <a href="login.html" class="nav-link">Login</a>
-                        <a href="signup.html" class="btn">Sign Up</a>
-                    </div>
-                    <div id="userMenu" style="display: none;">
-                        <a href="dashboard.html" class="btn">Dashboard</a>
-                    </div>
-                </nav>
-            </div>
-        </div>
-    </header>
+    <style>
+        /* Landing page specific styles */
+        .landing-page {
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
 
-    <!-- Hero Section -->
-    <main class="hero">
-        <div class="container">
-            <h1 class="hero-title">socialanxiety.lol</h1>
-            <p class="hero-subtitle">
-                
-                
-            </p>
-            <div class="hero-actions">
-                <a href="signup.html" class="btn">Create Profile</a>
-                <a href="#features" class="btn btn-secondary">Learn More</a>
-            </div>
-        </div>
-    </main>
+        .logo-container {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+        }
 
-    <!-- Features -->
-    <section id="features" class="features">
-        <div class="container">
-            <h2 class="section-title">Platform Features</h2>
-            <div class="grid">
-                <div class="card">
-                    <i class="fas fa-user-circle fa-2x" style="margin-bottom: 20px; color: var(--white);"></i>
-                    <h3>Custom Profiles</h3>
-                    <p style="color: var(--gray-300);"></p>
-                </div>
-                <div class="card">
-                    <i class="fas fa-music fa-2x" style="margin-bottom: 20px; color: var(--white);"></i>
-                    <h3>Audio Sharing</h3>
-                    <p style="color: var(--gray-300);"></p>
-                </div>
-                <div class="card">
-                    <i class="fas fa-link fa-2x" style="margin-bottom: 20px; color: var(--white);"></i>
-                    <h3>Personal URL</h3>
-                    <p style="color: var(--gray-300);"></p>
-                </div>
-                <div class="card">
-                    <i class="fas fa-shield-alt fa-2x" style="margin-bottom: 20px; color: var(--white);"></i>
-                    <h3>Privacy Focused</h3>
-                    <p style="color: var(--gray-300);"></p>
-                </div>
-            </div>
-        </div>
-    </section>
+        .main-logo {
+            font-size: 5rem;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: -3px;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            animation: logoGlow 3s infinite alternate;
+        }
 
-    <!-- CTA -->
-    <section class="cta">
-        <div class="container">
-            <div class="card" style="text-align: center;">
-                <h2 style="font-size: 32px; margin-bottom: 16px;">Get Your Profile</h2>
-                <p style="color: var(--gray-300); margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
-                    
-                </p>
-                <a href="signup.html" class="btn" style="padding: 15px 40px; font-size: 16px;">Start Now</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-links">
-                <a href="/">Home</a>
-                <a href="login.html">Login</a>
-                <a href="signup.html">Sign Up</a>
-                <a href="#privacy">Privacy</a>
-                <a href="#terms">Terms</a>
-            </div>
-            <p class="copyright">© 2023 socialanxiety.lol. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <script src="particles.js"></script>
-    <script src="config.js"></script>
-    <script src="auth.js"></script>
-    <script>
-        // Initialize particles
-        initStars();
-        
-        // Check auth status
-        async function checkAuth() {
-            const { data: { session } } = await supabase.auth.getSession();
-            const authButtons = document.getElementById('authButtons');
-            const userMenu = document.getElementById('userMenu');
-            
-            if (session) {
-                authButtons.style.display = 'none';
-                userMenu.style.display = 'block';
+        @keyframes logoGlow {
+            0% {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.2),
+                           0 0 40px rgba(255, 255, 255, 0.1);
+            }
+            100% {
+                text-shadow: 0 0 30px rgba(255, 255, 255, 0.4),
+                           0 0 60px rgba(255, 255, 255, 0.2),
+                           0 0 80px rgba(255, 255, 255, 0.1);
             }
         }
-        
-        document.addEventListener('DOMContentLoaded', checkAuth);
+
+        .auth-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .auth-btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-btn {
+            background: transparent;
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .login-btn:hover {
+            border-color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .signup-btn {
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #ffffff;
+        }
+
+        .signup-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Particle container */
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* Animated gradient background */
+        .gradient-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 30%, 
+                rgba(50, 50, 50, 0.8) 0%, 
+                rgba(10, 10, 10, 0.9) 40%,
+                rgba(0, 0, 0, 1) 100%);
+            animation: pulseBG 10s infinite alternate;
+        }
+
+        @keyframes pulseBG {
+            0% {
+                opacity: 0.7;
+                background-size: 100% 100%;
+            }
+            100% {
+                opacity: 1;
+                background-size: 150% 150%;
+            }
+        }
+
+        /* Scan line effect */
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent);
+            animation: scan 3s linear infinite;
+            z-index: 2;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0;
+            }
+            100% {
+                top: 100%;
+            }
+        }
+
+        /* Subtle grid overlay */
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        /* Subtle vignette */
+        .vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, 
+                transparent 0%, 
+                rgba(0, 0, 0, 0.8) 70%);
+            z-index: 1;
+        }
+
+        /* Subtle floating animation for logo */
+        @keyframes float {
+            0%, 100% {
+                transform: translate(-50%, -50%) translateY(0);
+            }
+            50% {
+                transform: translate(-50%, -50%) translateY(-20px);
+            }
+        }
+
+        .logo-container {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="landing-page">
+    <!-- Animated Background -->
+    <div class="gradient-bg"></div>
+    <div class="grid-overlay"></div>
+    <div class="vignette"></div>
+    <div class="scan-line"></div>
+    
+    <!-- Particles -->
+    <div class="particles-container" id="particles"></div>
+
+    <!-- Logo and Buttons -->
+    <div class="logo-container">
+        <div class="main-logo">socialanxiety.lol</div>
+        <div class="auth-buttons">
+            <a href="login.html" class="auth-btn login-btn">LOGIN</a>
+            <a href="signup.html" class="auth-btn signup-btn">SIGN UP</a>
+        </div>
+    </div>
+
+    <script>
+        // Create animated particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const colors = ['#ffffff', '#cccccc', '#aaaaaa'];
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = Math.random() * 3 + 1 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.borderRadius = '50%';
+                particle.style.opacity = Math.random() * 0.6 + 0.2;
+                
+                // Random position
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                
+                // Animation
+                const duration = Math.random() * 20 + 10;
+                particle.style.animation = `
+                    float ${duration}s linear infinite,
+                    pulse ${Math.random() * 3 + 2}s ease-in-out infinite
+                `;
+                
+                // CSS for animations
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes float {
+                        0% {
+                            transform: translate(0, 0) rotate(0deg);
+                            opacity: ${Math.random() * 0.6 + 0.2};
+                        }
+                        100% {
+                            transform: translate(${Math.random() * 200 - 100}px, 
+                                              ${Math.random() * 200 - 100}px) 
+                                     rotate(${Math.random() * 360}deg);
+                            opacity: ${Math.random() * 0.3};
+                        }
+                    }
+                    @keyframes pulse {
+                        0%, 100% { opacity: ${Math.random() * 0.4 + 0.2}; }
+                        50% { opacity: ${Math.random() * 0.8 + 0.2}; }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Initialize particles
+        document.addEventListener('DOMContentLoaded', createParticles);
     </script>
 </body>
 </html>
