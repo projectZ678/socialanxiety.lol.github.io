@@ -1,7 +1,7 @@
 <?php
 // signup.php
 session_start();
-require_once 'config/database.php';
+require_once 'config/supabase.php';
 
 $error = '';
 $success = '';
@@ -26,36 +26,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($password !== $confirm_password) {
         $error = 'Passwords do not match';
     } else {
-        // Check if username or email exists
-        $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
-        $stmt->execute([$username, $email]);
-        
-        if ($stmt->rowCount() > 0) {
-            $error = 'Username or email already exists';
+        // Check if username exists
+        $existingUser = $supabase->getUserByUsername($username);
+        if ($existingUser) {
+            $error = 'Username already taken';
         } else {
-            // Create user
+            // Hash password
             $password_hash = password_hash($password, PASSWORD_DEFAULT);
-            $profile_link = strtolower($username);
             
-            $stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash, profile_link) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$username, $email, $password_hash, $profile_link]);
+            // Create user
+            $user_data = $supabase->createUser($username, $email, $password_hash, $username);
             
-            $user_id = $pdo->lastInsertId();
-            
-            // Create profile
-            $pfp_url = "https://api.dicebear.com/7.x/avataaars/svg?seed=" . urlencode($username);
-            $banner_url = "https://images.unsplash.com/photo-1614850523060-8da1d56ae167?w=1200&h=400&fit=crop";
-            
-            $stmt = $pdo->prepare("INSERT INTO profiles (user_id, username, pfp_url, banner_url) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$user_id, $username, $pfp_url, $banner_url]);
-            
-            // Set session
-            $_SESSION['user_id'] = $user_id;
-            $_SESSION['username'] = $username;
-            $_SESSION['profile_link'] = $profile_link;
-            
-            $success = 'Account created successfully!';
-            header('Refresh: 2; URL=/dashboard');
+            if ($user_data && isset($user_data[0]['id'])) {
+                $user = $user_data[0];
+                
+                // Create profile
+                $pfp_url = "https://api.dicebear.com/7.x/avataaars/svg?seed=" . urlencode($username);
+                $profile_data = $supabase->createProfile($user['id'], $username, $pfp_url);
+                
+                // Set session
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['profile_link'] = $user['profile_link'];
+                
+                $success = 'Account created successfully! Redirecting...';
+                header('Refresh: 2; URL=/dashboard');
+            } else {
+                $error = 'Failed to create account. Please try again.';
+            }
         }
     }
 }
@@ -69,222 +67,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --bg-dark: #000000;
-            --bg-darker: #0a0a0a;
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --text-tertiary: rgba(255, 255, 255, 0.5);
-            --border-color: rgba(255, 255, 255, 0.1);
-            --accent-color: rgba(255, 255, 255, 0.15);
-            --success-color: #4cd964;
-            --error-color: #ff6b6b;
-            --card-bg: rgba(20, 20, 20, 0.85);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --gradient: linear-gradient(45deg, #fff, #aaa);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: var(--bg-dark);
-            color: var(--text-primary);
-            font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        /* Particles */
-        #particlesCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-            filter: grayscale(100%);
-        }
-
-        /* Form Container */
-        .form-container {
-            width: 100%;
-            max-width: 450px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .form-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--card-border);
-            border-radius: 24px;
-            padding: 40px;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .form-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .logo a {
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 2px;
-            text-decoration: none;
-        }
-
-        .form-title {
-            font-size: 2rem;
-            font-weight: 300;
-            letter-spacing: 3px;
-            margin-bottom: 12px;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .form-subtitle {
-            font-size: 14px;
-            opacity: 0.6;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 12px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            opacity: 0.7;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 16px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            color: var(--text-primary);
-            font-size: 16px;
-            font-family: inherit;
-            transition: all 0.3s ease;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
-        }
-
-        .form-input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-            letter-spacing: 1px;
-        }
-
-        .error-message {
-            color: var(--error-color);
-            font-size: 14px;
-            margin-top: 8px;
-            display: block;
-        }
-
-        .success-message {
-            color: var(--success-color);
-            font-size: 14px;
-            margin-top: 8px;
-            display: block;
-        }
-
-        .form-btn {
-            width: 100%;
-            padding: 18px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            color: var(--text-primary);
-            font-size: 16px;
-            font-weight: 500;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            border: none;
-            font-family: inherit;
-        }
-
-        .form-btn:hover:not(:disabled) {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .form-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .form-links {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 24px;
-            font-size: 14px;
-            opacity: 0.7;
-        }
-
-        .form-link {
-            color: var(--text-primary);
-            text-decoration: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-            padding-bottom: 2px;
-            transition: all 0.3s ease;
-        }
-
-        .form-link:hover {
-            opacity: 1;
-            border-bottom-color: rgba(255, 255, 255, 0.8);
-        }
-
-        @media (max-width: 768px) {
-            .form-card {
-                padding: 30px;
-            }
-        }
+        <?php include 'assets/css/auth.css'; ?>
+        /* Or copy the CSS from earlier signup examples */
     </style>
 </head>
 <body>
-    <!-- Particles -->
     <canvas id="particlesCanvas"></canvas>
-
-    <!-- Signup Form -->
+    
     <div class="form-container">
         <div class="form-card">
             <div class="form-header">
@@ -296,15 +85,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <?php if ($error): ?>
-                <div class="error-message" style="margin-bottom: 20px; padding: 12px; background: rgba(255, 107, 107, 0.1); border-radius: 8px;">
-                    <?php echo htmlspecialchars($error); ?>
-                </div>
+                <div class="error-message"><?php echo htmlspecialchars($error); ?></div>
             <?php endif; ?>
 
             <?php if ($success): ?>
-                <div class="success-message" style="margin-bottom: 20px; padding: 12px; background: rgba(76, 217, 100, 0.1); border-radius: 8px;">
-                    <?php echo htmlspecialchars($success); ?>
-                </div>
+                <div class="success-message"><?php echo htmlspecialchars($success); ?></div>
             <?php endif; ?>
 
             <form method="POST" action="">
@@ -328,9 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="password" id="confirm_password" name="confirm_password" class="form-input" placeholder="••••••••" required>
                 </div>
 
-                <button type="submit" class="form-btn">
-                    CREATE ACCOUNT
-                </button>
+                <button type="submit" class="form-btn">CREATE ACCOUNT</button>
             </form>
 
             <div class="form-links">
@@ -402,6 +185,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             init();
             animate();
             window.addEventListener('resize', resizeCanvas);
+        }
+
+        // Real-time username check
+        const usernameInput = document.getElementById('username');
+        if (usernameInput) {
+            let timeout;
+            usernameInput.addEventListener('input', function() {
+                clearTimeout(timeout);
+                const username = this.value.trim();
+                
+                if (username.length < 3) return;
+                
+                timeout = setTimeout(async () => {
+                    try {
+                        const response = await fetch(`/api/check-username?username=${encodeURIComponent(username)}`);
+                        const data = await response.json();
+                        
+                        if (data.available) {
+                            // Show available indicator
+                        } else {
+                            // Show error
+                        }
+                    } catch (error) {
+                        console.error('Error checking username:', error);
+                    }
+                }, 500);
+            });
         }
 
         // Initialize
