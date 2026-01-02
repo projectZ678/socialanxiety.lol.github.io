@@ -1,6 +1,13 @@
 <?php
-// index.php - Home Page
+// index.php
 session_start();
+require_once 'config/supabase.php';
+
+// Check if user is logged in
+$logged_in = isset($_SESSION['user_id']);
+
+// Get stats for homepage
+$stats = $supabase->getStats();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -79,16 +86,6 @@ session_start();
             50% { opacity: 0.4; }
         }
 
-        /* Main Container */
-        #app {
-            position: relative;
-            z-index: 2;
-            min-height: 100vh;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1.4s ease, transform 1.4s ease;
-        }
-
         /* Navigation */
         .navbar {
             display: flex;
@@ -153,6 +150,8 @@ session_start();
             justify-content: center;
             padding: 120px 40px 40px;
             text-align: center;
+            position: relative;
+            z-index: 2;
         }
 
         .hero-content {
@@ -222,6 +221,8 @@ session_start();
             padding: 60px 40px;
             text-align: center;
             background: rgba(255, 255, 255, 0.02);
+            position: relative;
+            z-index: 2;
         }
 
         .stats-grid {
@@ -284,13 +285,13 @@ session_start();
 <canvas id="particlesCanvas"></canvas>
 
 <!-- MAIN APP -->
-<div id="app">
+<div id="app" style="opacity: 0; transform: translateY(20px);">
     <nav class="navbar">
         <div class="logo">
             <a href="/">socialanxiety.lol</a>
         </div>
         <div class="nav-links">
-            <?php if (isset($_SESSION['user_id'])): ?>
+            <?php if ($logged_in): ?>
                 <a href="/dashboard" class="nav-btn">Dashboard</a>
                 <a href="/logout" class="nav-btn">Logout</a>
             <?php else: ?>
@@ -309,7 +310,7 @@ session_start();
             
             <div class="hero-actions">
                 <a href="/signup" class="cta-btn primary">Get Started</a>
-                <?php if (isset($_SESSION['user_id'])): ?>
+                <?php if ($logged_in): ?>
                     <a href="/dashboard" class="cta-btn secondary">Go to Dashboard</a>
                 <?php else: ?>
                     <a href="/login" class="cta-btn secondary">Already have account?</a>
@@ -322,15 +323,15 @@ session_start();
         <h2 style="font-size: 2.5rem; font-weight: 300; letter-spacing: 4px; margin-bottom: 60px;" class="gradient-text">Our Community</h2>
         <div class="stats-grid">
             <div class="stat-item">
-                <div class="stat-number" id="userCount">1254</div>
+                <div class="stat-number"><?php echo number_format($stats['users']); ?></div>
                 <div class="stat-label">Active Users</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number" id="profileCount">892</div>
+                <div class="stat-number"><?php echo number_format($stats['profiles']); ?></div>
                 <div class="stat-label">Profiles Created</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number" id="viewCount">45678</div>
+                <div class="stat-number"><?php echo number_format($stats['views']); ?></div>
                 <div class="stat-label">Profile Views</div>
             </div>
         </div>
@@ -411,29 +412,16 @@ session_start();
         }, 1200);
     });
 
-    // Animate stats
-    function animateCount(elementId, target) {
-        const element = document.getElementById(elementId);
-        if (!element) return;
-        
-        let current = 0;
-        const increment = target / 50;
-        const timer = setInterval(() => {
-            current += increment;
-            if (current >= target) {
-                current = target;
-                clearInterval(timer);
-            }
-            element.textContent = Math.floor(current).toLocaleString();
-        }, 30);
-    }
-
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
         initParticles();
-        animateCount('userCount', 1254);
-        animateCount('profileCount', 892);
-        animateCount('viewCount', 45678);
+        
+        // If user is already logged in, skip entrance
+        <?php if ($logged_in): ?>
+            document.getElementById('enterScreen').style.display = 'none';
+            document.getElementById('app').style.opacity = '1';
+            document.getElementById('app').style.transform = 'translateY(0)';
+        <?php endif; ?>
     });
 </script>
 </body>
