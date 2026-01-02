@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>socialanxiety.lol - Connect</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Star Background -->
+    <canvas id="starCanvas"></canvas>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <i class="fas fa-brain logo-icon"></i>
+                    socialanxiety.lol
+                </a>
+                <nav class="nav">
+                    <a href="/" class="nav-link active">Home</a>
+                    <a href="#features" class="nav-link">Features</a>
+                    <a href="#about" class="nav-link">About</a>
+                    <div id="authButtons">
+                        <a href="login.html" class="nav-link">Login</a>
+                        <a href="signup.html" class="btn">Sign Up</a>
+                    </div>
+                    <div id="userMenu" style="display: none;">
+                        <a href="dashboard.html" class="btn">Dashboard</a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="hero">
+        <div class="container">
+            <h1 class="hero-title">Express Yourself</h1>
+            <p class="hero-subtitle">
+                A minimalist platform for sharing thoughts, music, and connections. 
+                Customize your space, upload your soundtrack, and connect with others.
+            </p>
+            <div class="hero-actions">
+                <a href="signup.html" class="btn">Create Profile</a>
+                <a href="#features" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Features -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Platform Features</h2>
+            <div class="grid">
+                <div class="card">
+                    <i class="fas fa-user-circle fa-2x" style="margin-bottom: 20px; color: var(--white);"></i>
+                    <h3>Custom Profiles</h3>
+                    <p style="color: var(--gray-300);"></p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-music fa-2x" style="margin-bottom: 20px; color: var(--white);"></i>
+                    <h3>Audio Sharing</h3>
+                    <p style="color: var(--gray-300);"></p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-link fa-2x" style="margin-bottom: 20px; color: var(--white);"></i>
+                    <h3>Personal URL</h3>
+                    <p style="color: var(--gray-300);"></p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-shield-alt fa-2x" style="margin-bottom: 20px; color: var(--white);"></i>
+                    <h3>Privacy Focused</h3>
+                    <p style="color: var(--gray-300);"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <div class="card" style="text-align: center;">
+                <h2 style="font-size: 32px; margin-bottom: 16px;">Get Your Profile</h2>
+                <p style="color: var(--gray-300); margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    
+                </p>
+                <a href="signup.html" class="btn" style="padding: 15px 40px; font-size: 16px;">Start Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="login.html">Login</a>
+                <a href="signup.html">Sign Up</a>
+                <a href="#privacy">Privacy</a>
+                <a href="#terms">Terms</a>
+            </div>
+            <p class="copyright">© 2023 socialanxiety.lol. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="particles.js"></script>
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Initialize particles
+        initStars();
+        
+        // Check auth status
+        async function checkAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            const authButtons = document.getElementById('authButtons');
+            const userMenu = document.getElementById('userMenu');
+            
+            if (session) {
+                authButtons.style.display = 'none';
+                userMenu.style.display = 'block';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', checkAuth);
+    </script>
+</body>
+</html>
