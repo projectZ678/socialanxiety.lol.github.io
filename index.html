@@ -4,265 +4,340 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>socialanxiety.lol</title>
-    <link rel="stylesheet" href="style.css">
     <style>
-        /* Landing page specific styles */
-        .landing-page {
-            position: relative;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000000;
+            color: #ffffff;
             min-height: 100vh;
             overflow: hidden;
+            position: relative;
         }
 
-        .logo-container {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 10;
+        /* Noise overlay */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.3;
         }
 
-        .main-logo {
-            font-size: 5rem;
+        /* Main container */
+        .main-container {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Animated background */
+        .bg-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 49%, rgba(255, 255, 255, 0.02) 50%, transparent 51%),
+                linear-gradient(transparent 49%, rgba(255, 255, 255, 0.02) 50%, transparent 51%);
+            background-size: 50px 50px;
+            opacity: 0.2;
+            z-index: 0;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Center content */
+        .center-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* Logo */
+        .logo {
+            font-size: 4.5rem;
             font-weight: 900;
-            color: #ffffff;
             letter-spacing: -3px;
-            margin-bottom: 2rem;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-            animation: logoGlow 3s infinite alternate;
+            margin-bottom: 3rem;
+            position: relative;
+            text-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.3),
+                0 0 40px rgba(255, 255, 255, 0.1);
+            animation: logoGlow 3s ease-in-out infinite alternate;
         }
 
         @keyframes logoGlow {
             0% {
-                text-shadow: 0 0 20px rgba(255, 255, 255, 0.2),
-                           0 0 40px rgba(255, 255, 255, 0.1);
+                text-shadow: 
+                    0 0 20px rgba(255, 255, 255, 0.2),
+                    0 0 40px rgba(255, 255, 255, 0.1);
             }
             100% {
-                text-shadow: 0 0 30px rgba(255, 255, 255, 0.4),
-                           0 0 60px rgba(255, 255, 255, 0.2),
-                           0 0 80px rgba(255, 255, 255, 0.1);
+                text-shadow: 
+                    0 0 30px rgba(255, 255, 255, 0.4),
+                    0 0 60px rgba(255, 255, 255, 0.2),
+                    0 0 90px rgba(255, 255, 255, 0.1);
             }
         }
 
-        .auth-buttons {
+        /* Button container */
+        .buttons {
             display: flex;
             gap: 1.5rem;
-            justify-content: center;
+            margin-top: 2rem;
         }
 
-        .auth-btn {
+        /* Buttons */
+        .btn {
             padding: 1rem 2.5rem;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             text-transform: uppercase;
             text-decoration: none;
-            border-radius: 50px;
-            transition: all 0.3s ease;
+            border-radius: 0;
             position: relative;
             overflow: hidden;
-        }
-
-        .login-btn {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             background: transparent;
             color: #ffffff;
-            border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
-        .login-btn:hover {
+        .btn:hover {
             border-color: #ffffff;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 10px 20px rgba(255, 255, 255, 0.1),
+                0 0 30px rgba(255, 255, 255, 0.05);
         }
 
-        .signup-btn {
+        .btn-signup {
             background: #ffffff;
             color: #000000;
-            border: 2px solid #ffffff;
+            border: 1px solid #ffffff;
         }
 
-        .signup-btn:hover {
+        .btn-signup:hover {
             background: rgba(255, 255, 255, 0.9);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 10px 20px rgba(255, 255, 255, 0.2),
+                0 0 40px rgba(255, 255, 255, 0.1);
         }
 
-        /* Particle container */
-        .particles-container {
+        /* Button lines */
+        .btn::before,
+        .btn::after {
+            content: '';
             position: absolute;
+            background: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .btn::before {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+
+        .btn::after {
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 1px;
+            transform: scaleX(0);
+            transform-origin: right;
+        }
+
+        .btn:hover::before,
+        .btn:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* Floating elements */
+        .floating-elements {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
+            z-index: 0;
         }
 
-        /* Animated gradient background */
-        .gradient-bg {
+        .floating-element {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 30% 30%, 
-                rgba(50, 50, 50, 0.8) 0%, 
-                rgba(10, 10, 10, 0.9) 40%,
-                rgba(0, 0, 0, 1) 100%);
-            animation: pulseBG 10s infinite alternate;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            animation: floatElement 20s infinite linear;
         }
 
-        @keyframes pulseBG {
+        @keyframes floatElement {
             0% {
-                opacity: 0.7;
-                background-size: 100% 100%;
+                transform: translate(0, 0) rotate(0deg);
             }
             100% {
-                opacity: 1;
-                background-size: 150% 150%;
+                transform: translate(100vw, 100vh) rotate(360deg);
             }
         }
 
-        /* Scan line effect */
+        /* Scan line */
         .scan-line {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 2px;
             background: linear-gradient(90deg, 
                 transparent, 
-                rgba(255, 255, 255, 0.3), 
+                rgba(255, 255, 255, 0.6), 
                 transparent);
-            animation: scan 3s linear infinite;
-            z-index: 2;
+            animation: scan 4s linear infinite;
+            z-index: 3;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
         @keyframes scan {
             0% {
                 top: 0;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
             }
             100% {
-                top: 100%;
+                top: 100vh;
+                opacity: 0;
             }
         }
 
-        /* Subtle grid overlay */
-        .grid-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            opacity: 0.3;
-            z-index: 1;
-        }
-
-        /* Subtle vignette */
-        .vignette {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, 
-                transparent 0%, 
-                rgba(0, 0, 0, 0.8) 70%);
-            z-index: 1;
-        }
-
-        /* Subtle floating animation for logo */
-        @keyframes float {
-            0%, 100% {
-                transform: translate(-50%, -50%) translateY(0);
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 3rem;
+                letter-spacing: -2px;
             }
-            50% {
-                transform: translate(-50%, -50%) translateY(-20px);
+            
+            .buttons {
+                flex-direction: column;
+                gap: 1rem;
             }
-        }
-
-        .logo-container {
-            animation: float 6s ease-in-out infinite;
+            
+            .btn {
+                padding: 1rem 2rem;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
-<body class="landing-page">
-    <!-- Animated Background -->
-    <div class="gradient-bg"></div>
-    <div class="grid-overlay"></div>
-    <div class="vignette"></div>
+<body>
+    <div class="noise"></div>
+    <div class="bg-lines"></div>
     <div class="scan-line"></div>
     
-    <!-- Particles -->
-    <div class="particles-container" id="particles"></div>
+    <!-- Floating elements will be added by JS -->
+    <div class="floating-elements" id="floatingElements"></div>
 
-    <!-- Logo and Buttons -->
-    <div class="logo-container">
-        <div class="main-logo">socialanxiety.lol</div>
-        <div class="auth-buttons">
-            <a href="login.html" class="auth-btn login-btn">LOGIN</a>
-            <a href="signup.html" class="auth-btn signup-btn">SIGN UP</a>
+    <div class="main-container">
+        <div class="center-content">
+            <div class="logo">socialanxiety.lol</div>
+            <div class="buttons">
+                <a href="login.html" class="btn">LOGIN</a>
+                <a href="signup.html" class="btn btn-signup">SIGN UP</a>
+            </div>
         </div>
     </div>
 
     <script>
-        // Create animated particles
-        function createParticles() {
-            const container = document.getElementById('particles');
-            const colors = ['#ffffff', '#cccccc', '#aaaaaa'];
+        // Create floating elements
+        function createFloatingElements() {
+            const container = document.getElementById('floatingElements');
+            const count = 8;
             
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.style.position = 'absolute';
-                particle.style.width = Math.random() * 3 + 1 + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-                particle.style.borderRadius = '50%';
-                particle.style.opacity = Math.random() * 0.6 + 0.2;
+            for (let i = 0; i < count; i++) {
+                const element = document.createElement('div');
+                const size = Math.random() * 200 + 50;
+                const duration = Math.random() * 30 + 20;
+                const delay = Math.random() * 5;
                 
-                // Random position
-                particle.style.left = Math.random() * 100 + 'vw';
-                particle.style.top = Math.random() * 100 + 'vh';
+                element.className = 'floating-element';
+                element.style.width = size + 'px';
+                element.style.height = size + 'px';
+                element.style.left = Math.random() * 100 + 'vw';
+                element.style.top = Math.random() * 100 + 'vh';
+                element.style.animationDuration = duration + 's';
+                element.style.animationDelay = delay + 's';
                 
-                // Animation
-                const duration = Math.random() * 20 + 10;
-                particle.style.animation = `
-                    float ${duration}s linear infinite,
-                    pulse ${Math.random() * 3 + 2}s ease-in-out infinite
-                `;
-                
-                // CSS for animations
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes float {
-                        0% {
-                            transform: translate(0, 0) rotate(0deg);
-                            opacity: ${Math.random() * 0.6 + 0.2};
-                        }
-                        100% {
-                            transform: translate(${Math.random() * 200 - 100}px, 
-                                              ${Math.random() * 200 - 100}px) 
-                                     rotate(${Math.random() * 360}deg);
-                            opacity: ${Math.random() * 0.3};
-                        }
-                    }
-                    @keyframes pulse {
-                        0%, 100% { opacity: ${Math.random() * 0.4 + 0.2}; }
-                        50% { opacity: ${Math.random() * 0.8 + 0.2}; }
-                    }
-                `;
-                document.head.appendChild(style);
-                
-                container.appendChild(particle);
+                container.appendChild(element);
             }
         }
 
-        // Initialize particles
-        document.addEventListener('DOMContentLoaded', createParticles);
+        // Create pulse effect
+        function createPulse() {
+            const pulse = document.createElement('div');
+            pulse.style.position = 'fixed';
+            pulse.style.top = '50%';
+            pulse.style.left = '50%';
+            pulse.style.transform = 'translate(-50%, -50%)';
+            pulse.style.width = '1px';
+            pulse.style.height = '1px';
+            pulse.style.borderRadius = '50%';
+            pulse.style.boxShadow = '0 0 200px 200px rgba(255, 255, 255, 0.03)';
+            pulse.style.animation = 'pulseEffect 8s ease-in-out infinite';
+            pulse.style.zIndex = '0';
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes pulseEffect {
+                    0%, 100% { opacity: 0.1; transform: translate(-50%, -50%) scale(0.8); }
+                    50% { opacity: 0.3; transform: translate(-50%, -50%) scale(1.2); }
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(pulse);
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            createFloatingElements();
+            createPulse();
+            
+            // Add keyboard shortcut for login
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    window.location.href = 'signup.html';
+                }
+            });
+        });
     </script>
 </body>
 </html>
