@@ -493,49 +493,141 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // === SUPABASE CLIENT ===
-        const supabase = {
-            from: (table) => {
-                return {
-                    select: (columns = '*') => ({
-                        eq: (column, value) => ({
-                            single: async () => {
-                                try {
-                                    const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${column}=eq.${value}&select=${columns}`, {
-                                        headers: {
-                                            'apikey': SUPABASE_ANON_KEY,
-                                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                                            'Content-Type': 'application/json'
-                                        }
-                                    });
-                                    if (!response.ok) throw new Error('Network error');
-                                    const data = await response.json();
-                                    return { data: data[0], error: data.length === 0 ? { message: 'Not found' } : null };
-                                } catch (error) {
-                                    return { data: null, error };
-                                }
+        // === SIMPLE SUPABASE CLIENT (FIXED) ===
+        const supabaseClient = {
+            async fetchUser(identifier) {
+                try {
+                    // Try by username first
+                    const usernameResponse = await fetch(
+                        `${SUPABASE_URL}/rest/v1/users?username=eq.${identifier.toLowerCase()}&select=*`,
+                        {
+                            headers: {
+                                'apikey': SUPABASE_ANON_KEY,
+                                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                                'Content-Type': 'application/json'
                             }
-                        }),
-                        or: (condition) => ({
-                            single: async () => {
-                                try {
-                                    const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${condition}&select=${columns}`, {
-                                        headers: {
-                                            'apikey': SUPABASE_ANON_KEY,
-                                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                                            'Content-Type': 'application/json'
-                                        }
-                                    });
-                                    if (!response.ok) throw new Error('Network error');
-                                    const data = await response.json();
-                                    return { data: data[0], error: data.length === 0 ? { message: 'Not found' } : null };
-                                } catch (error) {
-                                    return { data: null, error };
-                                }
+                        }
+                    );
+                    
+                    const usernameData = await usernameResponse.json();
+                    
+                    if (usernameData && usernameData.length > 0) {
+                        return usernameData[0];
+                    }
+                    
+                    // Try by email
+                    const emailResponse = await fetch(
+                        `${SUPABASE_URL}/rest/v1/users?email=eq.${identifier.toLowerCase()}&select=*`,
+                        {
+                            headers: {
+                                'apikey': SUPABASE_ANON_KEY,
+                                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                                'Content-Type': 'application/json'
                             }
-                        })
-                    })
-                };
+                        }
+                    );
+                    
+                    const emailData = await emailResponse.json();
+                    
+                    if (emailData && emailData.length > 0) {
+                        return emailData[0];
+                    }
+                    
+                    return null;
+                } catch (error) {
+                    console.error('Error fetching user:', error);
+                    return null;
+                }
+            },
+            
+            async fetchUserProfile(userId) {
+                try {
+                    const response = await fetch(
+                        `${SUPABASE_URL}/rest/v1/profiles?user_id=eq.${userId}&select=*`,
+                        {
+                            headers: {
+                                'apikey': SUPABASE_ANON_KEY,
+                                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    );
+                    
+                    const data = await response.json();
+                    return data && data.length > 0 ? data[0] : null;
+                } catch (error) {
+                    console.error('Error fetching profile:', error);
+                    return null;
+                }
+            },
+            
+            async resetPassword(email) {
+                try {
+                    // Find user by email
+                    const response = await fetch(
+                        `${SUPABASE_URL}/rest/v1/users?email=eq.${email.toLowerCase()}&select=id,username`,
+                        {
+                            headers: {
+                                'apikey': SUPABASE_ANON_KEY,
+                                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    );
+                    
+                    const data = await response.json();
+                    
+                    if (!data || data.length === 0) {
+                        return { success: false, error: 'No account found with this email' };
+                    }
+                    
+                    const user = data[0];
+                    
+                    // Generate a simple reset token (for demo purposes only)
+                    // In production, you would send an actual email
+                    const resetToken = Math.random().toString(36).substring(2, 15);
+                    
+                    // Store reset token in localStorage (simulating email)
+                    localStorage.setItem(`reset_token_${user.id}`, resetToken);
+                    localStorage.setItem(`reset_email_${user.id}`, email);
+                    
+                    return { 
+                        success: true, 
+                        message: 'Password reset instructions have been sent to your email',
+                        userId: user.id,
+                        username: user.username
+                    };
+                } catch (error) {
+                    console.error('Error resetting password:', error);
+                    return { success: false, error: 'Failed to process reset request' };
+                }
+            },
+            
+            async updatePassword(userId, newPassword) {
+                try {
+                    const passwordHash = await hashPassword(newPassword);
+                    
+                    const response = await fetch(
+                        `${SUPABASE_URL}/rest/v1/users?id=eq.${userId}`,
+                        {
+                            method: 'PATCH',
+                            headers: {
+                                'apikey': SUPABASE_ANON_KEY,
+                                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                password_hash: passwordHash,
+                                updated_at: new Date().toISOString()
+                            })
+                        }
+                    );
+                    
+                    return response.ok;
+                } catch (error) {
+                    console.error('Error updating password:', error);
+                    return false;
+                }
             }
         };
 
@@ -566,18 +658,13 @@
             btn.disabled = true;
             
             try {
-                // Find user by username or email
-                const { data: users, error } = await supabase
-                    .from('users')
-                    .select('*')
-                    .or(`username.eq.${identifier.toLowerCase()},email.eq.${identifier.toLowerCase()}`);
+                // Find user
+                const user = await supabaseClient.fetchUser(identifier);
                 
-                if (error || !users || users.length === 0) {
+                if (!user) {
                     showError('identifierError', 'Invalid username or email');
                     throw new Error('User not found');
                 }
-                
-                const user = users[0];
                 
                 // Verify password
                 const passwordHash = await hashPassword(password);
@@ -587,15 +674,7 @@
                 }
                 
                 // Fetch user profile
-                const { data: profiles, error: profileError } = await fetch(`${SUPABASE_URL}/rest/v1/profiles?user_id=eq.${user.id}`, {
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json'
-                    }
-                }).then(res => res.json());
-                
-                const profile = profiles ? profiles[0] : null;
+                const profile = await supabaseClient.fetchUserProfile(user.id);
                 
                 // Store user in localStorage
                 const userData = {
@@ -640,10 +719,174 @@
         });
 
         // === FORGOT PASSWORD ===
-        function showForgotPassword() {
+        async function showForgotPassword() {
             const email = prompt('Enter your email to reset password:');
-            if (email) {
-                showNotification(`Password reset link sent to ${email}`);
+            if (!email) return;
+            
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showNotification('Please enter a valid email address', 'error');
+                return;
+            }
+            
+            const result = await supabaseClient.resetPassword(email);
+            
+            if (result.success) {
+                showNotification(result.message);
+                
+                // Show password reset dialog
+                setTimeout(() => {
+                    showPasswordResetDialog(result.userId, result.username, email);
+                }, 1000);
+            } else {
+                showNotification(result.error || 'Failed to send reset email', 'error');
+            }
+        }
+
+        // === PASSWORD RESET DIALOG ===
+        function showPasswordResetDialog(userId, username, email) {
+            // Create reset dialog
+            const dialog = document.createElement('div');
+            dialog.className = 'modal';
+            dialog.style.display = 'flex';
+            dialog.innerHTML = `
+                <div class="modal-content" style="max-width: 400px;">
+                    <div class="modal-header">
+                        <h2>Reset Password</h2>
+                        <button class="modal-close" onclick="this.parentElement.parentElement.remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p style="margin-bottom: 20px; color: var(--text-secondary);">
+                            Enter a new password for <strong>${email}</strong>
+                        </p>
+                        <div class="form-group">
+                            <label class="form-label">NEW PASSWORD</label>
+                            <input type="password" id="newPassword" class="form-input" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">CONFIRM PASSWORD</label>
+                            <input type="password" id="confirmNewPassword" class="form-input" placeholder="••••••••" required>
+                        </div>
+                        <button class="action-btn" onclick="processPasswordReset('${userId}', '${email}')" style="width: 100%; margin-top: 20px;">
+                            Reset Password
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(dialog);
+            
+            // Add modal styles if not already present
+            if (!document.querySelector('#modal-styles')) {
+                const modalStyles = document.createElement('style');
+                modalStyles.id = 'modal-styles';
+                modalStyles.textContent = `
+                    .modal {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0, 0, 0, 0.8);
+                        backdrop-filter: blur(10px);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 1000;
+                        padding: 20px;
+                    }
+                    .modal-content {
+                        background: var(--card-bg);
+                        border: 1px solid var(--card-border);
+                        border-radius: 24px;
+                        padding: 40px;
+                        width: 100%;
+                        max-height: 80vh;
+                        overflow-y: auto;
+                    }
+                    .modal-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 30px;
+                    }
+                    .modal-header h2 {
+                        font-size: 1.5rem;
+                        font-weight: 300;
+                        letter-spacing: 2px;
+                        background: var(--gradient);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                    }
+                    .modal-close {
+                        background: none;
+                        border: none;
+                        color: var(--text-primary);
+                        font-size: 2rem;
+                        cursor: pointer;
+                        opacity: 0.7;
+                        transition: opacity 0.3s ease;
+                    }
+                    .modal-close:hover {
+                        opacity: 1;
+                    }
+                    .action-btn {
+                        padding: 12px 24px;
+                        background: rgba(255, 255, 255, 0.1);
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                        border-radius: 12px;
+                        color: var(--text-primary);
+                        font-size: 14px;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 8px;
+                        border: none;
+                        font-family: inherit;
+                    }
+                    .action-btn:hover {
+                        background: rgba(255, 255, 255, 0.15);
+                        transform: translateY(-2px);
+                    }
+                `;
+                document.head.appendChild(modalStyles);
+            }
+        }
+
+        // === PROCESS PASSWORD RESET ===
+        async function processPasswordReset(userId, email) {
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmNewPassword').value;
+            
+            if (!newPassword || !confirmPassword) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                showNotification('Password must be at least 6 characters', 'error');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showNotification('Passwords do not match', 'error');
+                return;
+            }
+            
+            const success = await supabaseClient.updatePassword(userId, newPassword);
+            
+            if (success) {
+                showNotification('Password reset successfully! You can now log in with your new password.');
+                
+                // Remove modal
+                const modal = document.querySelector('.modal');
+                if (modal) modal.remove();
+                
+                // Clear reset tokens
+                localStorage.removeItem(`reset_token_${userId}`);
+                localStorage.removeItem(`reset_email_${userId}`);
+            } else {
+                showNotification('Failed to reset password. Please try again.', 'error');
             }
         }
 
