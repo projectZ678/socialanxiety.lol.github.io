@@ -1,12 +1,16 @@
 RewriteEngine On
 
-# Remove .html extension
+# Remove .php extension
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^([^\.]+)$ $1.html [NC,L]
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php [L]
 
-# Redirect to profile pages
+# Profile pages
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_URI} !^/(login|signup|dashboard|api)
+RewriteCond %{REQUEST_URI} !^/(login|signup|dashboard|logout|api)
 RewriteRule ^([a-zA-Z0-9_]+)$ profile.php?username=$1 [L,QSA]
+
+# API routes
+RewriteRule ^api/check-username$ api/check-username.php [L]
+RewriteRule ^api/stats$ api/stats.php [L]
