@@ -469,4 +469,125 @@
             
             if (!isValid) return;
             
-           
+            // Check username availability
+            const isAvailable = await checkUsername(username);
+            if (!isAvailable) {
+                showError('usernameError', 'Username already taken');
+                return;
+            }
+            
+            // Update button state
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            btnText.innerHTML = '<div class="loading"></div>';
+            submitBtn.disabled = true;
+            
+            try {
+                // Hash password
+                const passwordHash = await hashPassword(password);
+                
+                // Create user
+                const { data: user, error: userError } = await supabase
+                    .from('users')
+                    .insert({
+                        username: username.toLowerCase(),
+                        email: email.toLowerCase(),
+                        password_hash: passwordHash,
+                        profile_link: username.toLowerCase(),
+                        created_at: new Date().toISOString()
+                    })
+                    .select()
+                    .single();
+                
+                if (userError) {
+                    if (userError.code === '23505') {
+                        if (userError.message.includes('username')) {
+                            showError('usernameError', 'Username already taken');
+                        } else if (userError.message.includes('email')) {
+                            showError('emailError', 'Email already registered');
+                        }
+                        throw userError;
+                    }
+                    throw userError;
+                }
+                
+                // Create profile
+                const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`;
+                const bannerUrl = `https://images.unsplash.com/photo-1614850523060-8da1d56ae167?w=1200&h=400&fit=crop&auto=format&q=80`;
+                
+                const { error: profileError } = await supabase
+                    .from('profiles')
+                    .insert({
+                        user_id: user.id,
+                        username: username,
+                        pfp_url: avatarUrl,
+                        banner_url: bannerUrl,
+                        bio: '',
+                        theme: 'dark',
+                        music_url: '',
+                        stats_views: 0,
+                        stats_visitors: 0,
+                        created_at: new Date().toISOString()
+                    });
+                
+                if (profileError) throw profileError;
+                
+                // Store user in localStorage
+                const userData = {
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    profileLink: user.profile_link,
+                    createdAt: user.created_at
+                };
+                localStorage.setItem('socialanxiety_user', JSON.stringify(userData));
+                
+                // Show success
+                showNotification('Account created successfully! Redirecting...', 'success');
+                
+                // Redirect to dashboard
+                setTimeout(() => {
+                    window.location.href = '/dashboard';
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Signup error:', error);
+                showNotification('Failed to create account. Please try again.', 'error');
+            } finally {
+                btnText.textContent = 'Create Account';
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Social login functions
+        function signInWithGoogle() {
+            showNotification('Google login coming soon!', 'info');
+        }
+
+        function signInWithGithub() {
+            showNotification('GitHub login coming soon!', 'info');
+        }
+
+        // Real-time username checking
+        let usernameTimeout;
+        document.getElementById('username').addEventListener('input', async (e) => {
+            clearTimeout(usernameTimeout);
+            const username = e.target.value.trim();
+            
+            if (username.length < 3) return;
+            
+            usernameTimeout = setTimeout(async () => {
+                const isAvailable = await checkUsername(username);
+                const errorElement = document.getElementById('usernameError');
+                
+                if (!isAvailable) {
+                    errorElement.textContent = 'Username already taken';
+                    errorElement.style.display = 'block';
+                } else {
+                    errorElement.style.display = 'none';
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>
