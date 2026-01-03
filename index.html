@@ -9,14 +9,21 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Courier New', monospace;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Courier New', monospace;
         }
 
-        
+        body {
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        /* Custom Cursor */
         .custom-cursor {
             position: fixed;
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             background: url('assets/custom_cursor.png') no-repeat center center;
             background-size: contain;
             pointer-events: none;
@@ -24,17 +31,11 @@
             transform: translate(-50%, -50%);
         }
 
-        
         body:not(.touch-device) {
             cursor: none;
         }
 
-        body {
-            background-color: #000;
-            color: #fff;
-            overflow: hidden;
-        }
-
+        /* Container & Background */
         .container {
             width: 100%;
             height: 100vh;
@@ -50,9 +51,13 @@
             object-fit: cover;
             z-index: 1;
             pointer-events: none;
+            filter: brightness(0.7);
         }
 
-        .glitch-overlay {
+        /* Overlays */
+        .glitch-overlay,
+        #hacker-overlay,
+        #snow-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -60,17 +65,10 @@
             height: 100%;
             pointer-events: none;
             z-index: 2;
-            opacity: 0;
-            transition: opacity 0.5s;
         }
 
-        #hacker-overlay, #snow-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
+        #hacker-overlay,
+        #snow-overlay {
             z-index: 3;
         }
 
@@ -78,610 +76,572 @@
             display: none !important;
         }
 
-        
-        .controls {
-            position: fixed;
-            bottom: calc(50% - 240px - 10px);
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            z-index: 20;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 5px 10px;
-            border-radius: 20px;
-            backdrop-filter: blur(5px);
-        }
-
-        .theme-button {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            background-color: rgba(0, 0, 0, 0.5);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .theme-button:hover {
-            transform: scale(1.1);
-            border-color: rgba(255, 255, 255, 0.8);
-        }
-
-        
-        .volume-control {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .volume-icon {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            display: flex;
-            color: white;
-        }
-
-        .slider {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 80px;
-            height: 5px;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.3);
-            outline: none;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: white;
-            cursor: pointer;
-        }
-
-        
-        .transparency-control {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .transparency-icon {
-            width: 20px;
-            height: 20px;
-            color: white;
-        }
-
-        
-        .top-controls {
-            position: fixed;
-            bottom: calc(50% - 240px - 60px);
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            z-index: 20;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 8px 12px;
-            border-radius: 20px;
-            backdrop-filter: blur(5px);
-        }
-
-        
-        #profile-block {
+        /* Main Content Container */
+        .main-content {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 820px;
-            min-height: 332px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 20px;
-            border-radius: 15px;
-            z-index: 20;
+            width: min(90%, 700px);
+            z-index: 10;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            backdrop-filter: blur(10px);
-            opacity: 0;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        /* Profile Card */
+        #profile-block {
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 2.5rem;
+            border-radius: 20px;
+            width: 100%;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             transform-style: preserve-3d;
-            transition: transform 0.5s ease-out;
-            pointer-events: auto;
+            transition: transform 0.5s ease-out, opacity 0.5s ease;
+            opacity: 0;
         }
 
         .profile-header {
             display: flex;
-            align-items: flex-start;
-            gap: 15px;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .profile-container {
             position: relative;
-            width: 150px;
-            height: 150px;
+            width: 140px;
+            height: 140px;
+            flex-shrink: 0;
         }
 
         .profile-container::after {
             content: '';
             position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
             border-radius: 50%;
-            background: radial-gradient(
-                circle at 10px 10px,
-                var(--primary-color, #00CED1) 10%,
-                transparent 15%
-            );
-            animation: orbit 3s linear infinite;
+            background: radial-gradient(circle at 30% 30%, var(--primary-color, #00CED1) 0%, transparent 70%);
+            animation: orbit 8s linear infinite;
             z-index: -1;
-            filter: blur(1px);
-            box-shadow: none;
-        }
-
-        .profile-container.fast-orbit::after {
-            animation: fast-orbit 0.5s linear forwards;
+            opacity: 0.4;
         }
 
         .profile-picture {
-            width: 150px;
-            height: 150px;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            cursor: pointer;
-            pointer-events: auto;
-            opacity: 1 !important;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
         }
 
-        .profile-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+        .profile-picture:hover {
+            transform: scale(1.05);
         }
 
-        .name-and-badges {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        
+        /* Typography */
         @font-face {
             font-family: 'Angel Wish';
             src: url('assets/Angel_wish.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
         }
 
         #profile-name {
-            font-family: 'Angel Wish', sans-serif;
-            font-size: 32px;
-            font-weight: bold;
-            letter-spacing: 3px;
+            font-family: 'Angel Wish', 'Courier New', monospace;
+            font-size: 2.8rem;
+            font-weight: 600;
+            letter-spacing: 2px;
             color: #fff;
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
-            opacity: 1 !important;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
         }
 
-        .badge-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .badge-container {
-            position: relative;
-            pointer-events: auto;
-            opacity: 1 !important;
-        }
-
-        .badge-container .tooltip {
-            visibility: hidden;
-            width: 120px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px 0;
-            position: absolute;
-            z-index: 100;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -60px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .badge-container:hover .tooltip {
-            visibility: visible;
-            opacity: 1 !important;
-        }
-
-        .badge-box {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 2px;
-            border-radius: 15px;
+        .opsec-tag {
             display: inline-block;
+            background: linear-gradient(135deg, rgba(0, 195, 255, 0.2), rgba(255, 0, 255, 0.2));
+            color: #fff;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
         }
 
-        .badge-box-inner {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 5px;
-            border-radius: 12px;
-            display: flex;
-            gap: 8px;
-            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
-        }
-
-        .badge {
-            width: 22px;
-            height: 22px;
-            transition: transform 0.3s;
-            pointer-events: auto;
-            opacity: 1 !important;
-        }
-
-        .badge:hover {
-            transform: scale(1.2);
+        .opsec-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 195, 255, 0.3);
         }
 
         #profile-bio {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 18px;
-            line-height: 1.5;
-            margin-bottom: 10px;
-            opacity: 1 !important;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 1rem 0;
+            font-weight: 300;
         }
 
+        /* Separator */
         .bio-separator {
-            width: 100%;
             height: 1px;
-            background: rgba(255, 255, 255, 0.2);
-            margin: 20px 0;
-            opacity: 1 !important;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            margin: 2rem 0;
         }
 
+        /* Social Links - Glowing Icons */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .social-link {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .social-icon {
+            width: 32px;
+            height: 32px;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 8px currentColor);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Discord Icon Color */
+        .social-link.discord .social-icon {
+            color: #5865F2;
+        }
+
+        /* TikTok Icon Color */
+        .social-link.tiktok .social-icon {
+            color: #000000;
+            filter: drop-shadow(0 0 8px #ff0050);
+        }
+
+        /* Glow Effect */
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: 0;
+            filter: blur(12px);
+            transition: all 0.4s ease;
+            z-index: 1;
+        }
+
+        .social-link.discord::before {
+            background: #5865F2;
+        }
+
+        .social-link.tiktok::before {
+            background: #ff0050;
+        }
+
+        .social-link:hover {
+            transform: translateY(-4px) scale(1.1);
+        }
+
+        .social-link:hover::before {
+            opacity: 0.4;
+            width: 56px;
+            height: 56px;
+        }
+
+        .social-link:hover .social-icon {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 16px currentColor);
+        }
+
+        /* Footer */
         .profile-footer {
             display: flex;
-            flex-direction: column;
-            gap: 5px;
-            width: 100%;
-            margin-top: auto;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .visitor-counter {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.8rem;
             background: rgba(255, 255, 255, 0.1);
-            padding: 8px 15px;
+            padding: 0.6rem 1.2rem;
             border-radius: 20px;
-            font-size: 14px;
-            align-self: flex-start;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
             position: relative;
-            pointer-events: auto;
-            opacity: 1 !important;
+            overflow: hidden;
+        }
+
+        .visitor-counter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .visitor-counter:hover::before {
+            left: 100%;
+        }
+
+        .visitor-counter:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         .visitor-icon {
             width: 18px;
             height: 18px;
-            color: white;
-            opacity: 1 !important;
+            opacity: 0.9;
         }
 
-        .visitor-counter .tooltip {
-            visibility: hidden;
-            width: 120px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px 0;
-            position: absolute;
-            z-index: 100;
-            top: -35px;
+        /* Controls Panel - Simplified */
+        .controls-panel {
+            position: fixed;
+            bottom: 2rem;
             left: 50%;
-            margin-left: -60px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .visitor-counter:hover .tooltip {
-            visibility: visible;
-            opacity: 1 !important;
-        }
-
-        #visitor-count {
-            opacity: 1 !important;
-        }
-
-        .social-links {
+            transform: translateX(-50%);
             display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 300px;
             justify-content: center;
-            gap: 12px;
-            margin-top: 0;
-            pointer-events: auto;
-            opacity: 1 !important;
         }
 
-        .social-icon {
+        .theme-selector {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .theme-button {
             width: 36px;
             height: 36px;
-            transition: transform 0.3s ease;
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
-            pointer-events: auto;
-            opacity: 1 !important;
-        }
-
-        .social-icon:hover {
-            transform: scale(1.4) rotateY(15deg);
-        }
-
-        
-        #skills-block {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 820px;
-            min-height: 332px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 20px;
-            border-radius: 15px;
-            z-index: 20;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            cursor: pointer;
             display: flex;
-            flex-direction: column;
-            gap: 15px;
-            backdrop-filter: blur(10px);
-            transform-style: preserve-3d;
-            transition: transform 0.5s ease-out;
-        }
-
-        .skills-title {
-            text-align: center;
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-
-        .skill {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .skill-name {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
         }
 
-        .skill-icon {
-            width: 22px;
-            height: 22px;
-            margin-right: 8px;
+        .theme-button:hover,
+        .theme-button.active {
+            transform: scale(1.15);
+            border-color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
-        .skill-bar-container {
-            height: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            overflow: hidden;
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
         }
 
-        .skill-bar {
-            height: 100%;
-            border-radius: 5px;
-            width: 0%;
-            transition: width 2s;
+        .control-icon {
+            width: 20px;
+            height: 20px;
+            color: white;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
         }
 
-        #python-bar {
-            background: linear-gradient(90deg, #ff6b6b, #ff9f9f);
+        .control-group:hover .control-icon {
+            opacity: 1;
         }
 
-        #cpp-bar {
-            background: linear-gradient(90deg, #4facfe, #00f2fe);
+        .slider {
+            width: 80px;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 2px;
+            outline: none;
+            transition: all 0.3s ease;
         }
 
-        #csharp-bar {
-            background: linear-gradient(90deg, #43e97b, #38f9d7);
+        .slider:hover {
+            background: rgba(255, 255, 255, 0.25);
         }
 
-        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            border: 2px solid rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Results Button */
         #results-button-container {
             position: fixed;
-            top: 20px;
+            top: 2rem;
             left: 50%;
             transform: translateX(-50%);
             z-index: 20;
         }
 
         #results-theme {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 8px 15px;
-            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.8rem 1.8rem;
+            border-radius: 30px;
             cursor: pointer;
             font-family: 'Courier New', monospace;
-            font-size: 14px;
-            backdrop-filter: blur(5px);
-            transition: all 0.3s;
+            font-size: 0.9rem;
+            letter-spacing: 1.5px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #results-theme::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        #results-theme:hover::before {
+            left: 100%;
         }
 
         #results-theme:hover {
             background: rgba(0, 0, 0, 0.9);
-            border-color: rgba(255, 255, 255, 0.8);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
         }
 
-        #results-hint {
-            position: absolute;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 10px;
-            font-size: 12px;
-            width: 180px;
+        /* Skills Block */
+        #skills-block {
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 2.5rem;
+            border-radius: 20px;
+            width: 100%;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease-out;
+        }
+
+        .skills-title {
+            font-size: 1.8rem;
             text-align: center;
-            pointer-events: none;
-            z-index: 25;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+            letter-spacing: 2px;
         }
 
-        #results-hint::before {
+        .skill {
+            margin: 1.5rem 0;
+        }
+
+        .skill-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-name {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .skill-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .skill-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .skill-progress {
+            height: 100%;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-progress::after {
             content: '';
             position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 0 10px 10px 10px;
-            border-style: solid;
-            border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.3) 50%, 
+                transparent 100%);
+            animation: shimmer 2s infinite;
         }
 
-        
-        .home-theme #profile-block,
-        .home-theme #skills-block {
-            border-color: rgba(0, 195, 255, 0.5);
-        }
-
-        .hacker-theme #profile-block,
-        .hacker-theme #skills-block {
-            border-color: rgba(0, 255, 0, 0.5);
-        }
-
-        .rain-theme #profile-block,
-        .rain-theme #skills-block {
-            border-color: rgba(100, 149, 237, 0.5);
-        }
-
-        .anime-theme #profile-block,
-        .anime-theme #skills-block {
-            border-color: rgba(255, 0, 255, 0.5);
-        }
-
-        .car-theme #profile-block,
-        .car-theme #skills-block {
-            border-color: rgba(255, 165, 0, 0.5);
-        }
-
-        
-        .glitch {
-            animation: glitch 0.2s ease-in-out;
-        }
-
-        @keyframes glitch {
-            0% {
-                transform: translate(0);
-            }
-            20% {
-                transform: translate(-2px, 2px);
-            }
-            40% {
-                transform: translate(-2px, -2px);
-            }
-            60% {
-                transform: translate(2px, 2px);
-            }
-            80% {
-                transform: translate(2px, -2px);
-            }
-            100% {
-                transform: translate(0);
-            }
-        }
-
-        @keyframes orbit {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes fast-orbit {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        
-        .cursor-trail {
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-        }
-
-        .cursor-trail-dot {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: opacity 0.3s ease;
-        }
-
-        
+        /* Start Screen */
         #start-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 30;
+            z-index: 100;
             cursor: pointer;
+            opacity: 1;
+            transition: opacity 0.8s ease;
         }
 
         #start-text {
             font-family: 'Courier New', monospace;
-            font-size: 24px;
-            color: #fff;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
             text-align: center;
+            line-height: 1.6;
+            max-width: 600px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            animation: pulse 2s ease-in-out infinite;
         }
 
-        
-        @media (max-width: 430px) {
-            
-            #profile-block, #skills-block {
-                width: 90vw;
-                max-width: 350px;
-                min-height: 280px;
-                padding: 15px;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
+        /* Animations */
+        @keyframes orbit {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 8px currentColor); }
+            50% { filter: drop-shadow(0 0 16px currentColor); }
+        }
+
+        /* Theme Borders */
+        .home-theme #profile-block,
+        .home-theme #skills-block {
+            border-color: rgba(0, 195, 255, 0.3);
+        }
+
+        .hacker-theme #profile-block,
+        .hacker-theme #skills-block {
+            border-color: rgba(0, 255, 0, 0.3);
+        }
+
+        .rain-theme #profile-block,
+        .rain-theme #skills-block {
+            border-color: rgba(100, 149, 237, 0.3);
+        }
+
+        .anime-theme #profile-block,
+        .anime-theme #skills-block {
+            border-color: rgba(255, 0, 255, 0.3);
+        }
+
+        .car-theme #profile-block,
+        .car-theme #skills-block {
+            border-color: rgba(255, 165, 0, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                width: 95%;
+            }
+
+            #profile-block,
+            #skills-block {
+                padding: 1.5rem;
+                border-radius: 16px;
             }
 
             .profile-header {
                 flex-direction: column;
-                align-items: center;
-                gap: 10px;
+                text-align: center;
+                gap: 1.5rem;
             }
 
             .profile-container {
@@ -689,325 +649,186 @@
                 height: 120px;
             }
 
-            .profile-picture {
-                width: 120px;
-                height: 120px;
-            }
-
-            .profile-info {
-                align-items: center;
-                text-align: center;
-            }
-
-            .name-and-badges {
-                flex-direction: column;
-                align-items: center;
-                gap: 8px;
-            }
-
             #profile-name {
-                font-size: 24px;
-                letter-spacing: 2px;
+                font-size: 2rem;
             }
 
-            .badge-group {
-                justify-content: center;
-                gap: 6px;
+            .controls-panel {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+                min-width: 250px;
             }
 
-            .badge {
-                width: 18px;
-                height: 18px;
-            }
-
-            .badge-container .tooltip {
-                width: 100px;
-                font-size: 12px;
-                margin-left: -50px;
-                bottom: 110%;
-            }
-
-            #profile-bio {
-                font-size: 14px;
-                line-height: 1.4;
-            }
-
-            .bio-separator {
-                margin: 15px 0;
+            .theme-selector {
+                order: 3;
+                margin-top: 0.5rem;
             }
 
             .social-links {
-                gap: 10px;
-                justify-content: center;
+                gap: 1.5rem;
             }
 
-            .social-icon {
-                width: 32px;
-                height: 32px;
+            .social-link {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #profile-name {
+                font-size: 1.6rem;
             }
 
-            .visitor-counter {
-                font-size: 12px;
-                padding: 6px 12px;
-                align-self: center;
-            }
-
-            .visitor-icon {
-                width: 16px;
-                height: 16px;
-            }
-
-            .visitor-counter .tooltip {
-                width: 100px;
-                font-size: 12px;
-                margin-left: -50px;
-                top: -30px;
+            #profile-bio {
+                font-size: 1rem;
             }
 
             .skills-title {
-                font-size: 18px;
-                margin-bottom: 10px;
-            }
-
-            .skill-icon {
-                width: 18px;
-                height: 18px;
-            }
-
-            .skill-name span {
-                font-size: 14px;
-            }
-
-            
-            .controls {
-                bottom: 20px;
-                gap: 8px;
-                padding: 5px 8px;
+                font-size: 1.4rem;
             }
 
             .theme-button {
-                width: 28px;
-                height: 28px;
-                font-size: 12px;
-            }
-
-            
-            .top-controls {
-                bottom: 70px;
-                gap: 10px;
-                padding: 6px 10px;
-            }
-
-            .volume-control, .transparency-control {
-                gap: 6px;
-            }
-
-            .volume-icon, .transparency-icon {
-                width: 18px;
-                height: 18px;
+                width: 32px;
+                height: 32px;
+                font-size: 0.7rem;
             }
 
             .slider {
-                width: 60px;
-                height: 4px;
+                width: 70px;
             }
 
-            .slider::-webkit-slider-thumb {
-                width: 10px;
-                height: 10px;
-            }
-
-            
-            #results-button-container {
-                top: 10px;
-            }
-
-            #results-theme {
-                padding: 6px 12px;
-                font-size: 12px;
-            }
-
-            #results-hint {
-                width: 150px;
-                font-size: 10px;
-                padding: 6px 10px;
-            }
-
-            
-            #start-text {
-                font-size: 18px;
-                padding: 0 20px;
+            .controls-panel {
+                width: 90%;
+                padding: 0.8rem;
             }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Retro+Gaming&display=swap" rel="stylesheet">
 </head>
 <body class="home-theme" onload="initMedia()">
     
     <div class="custom-cursor"></div>
 
-    
+    <!-- Start Screen -->
     <div id="start-screen">
-        <div id="start-text"></div>
+        <div id="start-text">Click anywhere to enter</div>
     </div>
 
     <div class="container">
-        
-        <video id="background" autoplay loop muted playsinline webkit-playsinline>
+        <!-- Background Video -->
+        <video id="background" autoplay loop muted playsinline>
             <source src="assets/anime_red.mp4" type="video/mp4">
         </video>
 
-        
+        <!-- Overlays -->
         <div class="glitch-overlay"></div>
-        <div id="hacker-overlay" class="hidden">
-            
-        </div>
-        <div id="snow-overlay" class="hidden">
-            
-        </div>
+        <div id="hacker-overlay" class="hidden"></div>
+        <div id="snow-overlay" class="hidden"></div>
 
-
-        <div id="profile-block">
-            <div class="profile-header">
-                <div class="profile-container">
-                    <img src="assets/anime.gif" alt="Profile" class="profile-picture">
-                </div>
-                <div class="profile-info">
-                    <div class="name-and-badges">
-                        <div id="profile-name">@opsec</div>
-                        <div class="badge-box">
-                            <div class="badge-box-inner">
-                                <div class="badge-group">
-                                    <div class="">
-                                        <img src="" class="">
-                                        <span class=""></span>
-                                    </div>
-                                    <div class="">
-                                        <img src="" class="">
-                                        <span class=""></span>
-                                    </div>
-                                    <div class="">
-                                        <img src="" alt="" class="">
-                                        <span class=""></span>
-                                    </div>
-                                    <div class="">
-                                        <img src="" alt="" class="">
-                                        <span class=""></span>
-                                    </div>
-                                    <div class="">
-                                        <img src="" alt="" class="">
-                                        <span class=""></span>
-                                    </div>
-                                    <div class="">
-                                        <img src="" alt="" class="">
-                                        <span class=""></span>
-                                    </div>
-                                    <div class="">
-                                        <img src="" alt="" class="">
-                                        <span class=""></span>
-                                    </div>
-                                    <div class="">
-                                        <img src="" alt="" class="">
-                                        <span class=""></span>
-                                    </div>
-                                    <div class="">
-                                        <img src="" alt="opsec warrior" class="">
-                                        <span class=""></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Profile Block -->
+            <div id="profile-block">
+                <div class="profile-header">
+                    <div class="profile-container">
+                        <img src="assets/anime.gif" alt="Profile" class="profile-picture">
                     </div>
-                    <div id="profile-bio"></div>
+                    <div class="profile-info">
+                        <h1 id="profile-name">@opsec</h1>
+                        <div class="opsec-tag">opsec warrior</div>
+                        <p id="profile-bio">Cyber security enthusiast • Full-stack developer • Open-source contributor</p>
+                    </div>
                 </div>
-            </div>
 
-            <div class="bio-separator"></div>
-
-            <div class="profile-footer">
+                <div class="bio-separator"></div>
 
                 <div class="social-links">
-                    <a href="https://discord.gg/usercentral" target="_blank">
-                        <img src="assets/discord.png" alt="Discord" class="social-icon">
+                    <a href="https://discord.gg/usercentral" target="_blank" class="social-link discord">
+                        <svg class="social-icon" viewBox="0 0 24 24" fill="none">
+                            <path d="M20.5 5.5C18.5 4.5 16.4 4 14.3 4C14 4 13.7 4 13.4 4C13.1 4 12.9 4 12.6 4.1C12.4 4.1 12.1 4.2 11.9 4.2C11.7 4.3 11.5 4.4 11.3 4.5C11.1 4.6 11 4.7 10.8 4.9C10.7 5 10.5 5.1 10.4 5.3C10.3 5.4 10.2 5.6 10.1 5.8C10 6 9.9 6.2 9.9 6.4C9.8 6.7 9.8 6.9 9.8 7.2C9.8 7.4 9.8 7.7 9.9 7.9C10 8.1 10.1 8.3 10.2 8.5C10.3 8.7 10.5 8.9 10.7 9C10.9 9.1 11.1 9.2 11.3 9.3C11.6 9.4 11.8 9.4 12.1 9.4C12.4 9.4 12.7 9.4 13 9.3C13.2 9.2 13.5 9.1 13.7 8.9C13.9 8.8 14.1 8.6 14.3 8.4C14.5 8.2 14.7 8 14.9 7.8C15.1 7.6 15.3 7.4 15.4 7.1C15.6 6.9 15.7 6.7 15.8 6.4C15.9 6.2 16 5.9 16 5.7C16 5.5 16 5.2 15.9 5C15.8 4.8 15.7 4.6 15.6 4.4C15.5 4.2 15.3 4 15.1 3.9C14.9 3.8 14.7 3.7 14.5 3.6C14.2 3.5 13.9 3.5 13.6 3.5C13.3 3.5 13 3.5 12.7 3.6C12.4 3.6 12.1 3.7 11.8 3.8C11.6 3.9 11.3 4 11.1 4.1C10.9 4.2 10.7 4.4 10.5 4.5C10.3 4.7 10.1 4.9 10 5.1C9.9 5.3 9.8 5.5 9.7 5.8C9.6 6 9.6 6.3 9.6 6.6C9.6 6.9 9.6 7.2 9.7 7.5C9.8 7.8 9.9 8.1 10.1 8.4C10.3 8.7 10.5 8.9 10.8 9.1C11.1 9.3 11.4 9.4 11.7 9.5C12 9.6 12.3 9.7 12.7 9.7C13 9.7 13.3 9.7 13.6 9.6C13.9 9.5 14.2 9.4 14.5 9.3C14.8 9.2 15.1 9 15.3 8.8C15.6 8.6 15.8 8.4 16 8.2C16.2 8 16.4 7.7 16.5 7.4C16.7 7.1 16.8 6.8 16.9 6.5C17 6.2 17 5.9 17 5.6C17 5.3 17 5 16.9 4.7C16.8 4.4 16.7 4.2 16.5 4C16.3 3.8 16.1 3.6 15.9 3.4C15.7 3.3 15.4 3.2 15.2 3.1C14.9 3 14.6 3 14.3 3C14 3 13.7 3 13.4 3.1C13.1 3.1 12.8 3.2 12.5 3.3C12.3 3.4 12 3.5 11.8 3.6C11.6 3.7 11.4 3.9 11.2 4.1C11 4.3 10.8 4.5 10.7 4.7C10.6 4.9 10.5 5.1 10.4 5.4C10.3 5.6 10.3 5.9 10.3 6.2C10.3 6.5 10.3 6.8 10.4 7.1C10.5 7.4 10.6 7.7 10.8 8C11 8.3 11.2 8.5 11.5 8.7C11.8 8.9 12.1 9.1 12.4 9.2C12.7 9.3 13.1 9.4 13.4 9.4C13.7 9.4 14.1 9.4 14.4 9.3C14.7 9.2 15 9.1 15.3 9C15.6 8.9 15.9 8.7 16.1 8.5C16.4 8.3 16.6 8.1 16.8 7.9C17 7.7 17.2 7.4 17.3 7.2C17.4 7 17.5 6.7 17.6 6.5C17.7 6.3 17.7 6 17.8 5.8C17.8 5.6 17.8 5.4 17.8 5.2C17.8 5 17.8 4.8 17.7 4.6C17.6 4.4 17.5 4.2 17.4 4C17.3 3.8 17.2 3.6 17 3.5C16.8 3.4 16.6 3.3 16.4 3.2C16.2 3.1 16 3 15.7 3C15.5 3 15.2 3 15 3.1C14.8 3.1 14.5 3.2 14.3 3.3C14.1 3.4 13.9 3.5 13.7 3.6C13.5 3.7 13.3 3.9 13.1 4.1C12.9 4.3 12.8 4.5 12.7 4.7C12.6 4.9 12.5 5.1 12.4 5.4C12.3 5.6 12.3 5.9 12.3 6.2C12.3 6.5 12.3 6.8 12.4 7.1C12.5 7.4 12.6 7.7 12.8 8C13 8.3 13.2 8.5 13.5 8.7C13.8 8.9 14.1 9.1 14.4 9.2C14.7 9.3 15.1 9.4 15.4 9.4C15.7 9.4 16.1 9.4 16.4 9.3C16.7 9.2 17 9.1 17.3 9C17.6 8.9 17.9 8.7 18.2 8.5C18.5 8.3 18.7 8.1 18.9 7.9C19.1 7.7 19.3 7.5 19.5 7.3C19.7 7.1 19.8 6.9 20 6.7C20.1 6.5 20.2 6.3 20.3 6.1C20.4 5.9 20.5 5.7 20.5 5.5Z" fill="currentColor"/>
+                            <path d="M9.5 12.5C8.5 11.5 7.4 11 6.3 11C6 11 5.7 11 5.4 11C5.1 11 4.9 11 4.6 11.1C4.4 11.1 4.1 11.2 3.9 11.2C3.7 11.3 3.5 11.4 3.3 11.5C3.1 11.6 3 11.7 2.8 11.9C2.7 12 2.5 12.1 2.4 12.3C2.3 12.4 2.2 12.6 2.1 12.8C2 13 1.9 13.2 1.9 13.4C1.8 13.7 1.8 13.9 1.8 14.2C1.8 14.4 1.8 14.7 1.9 14.9C2 15.1 2.1 15.3 2.2 15.5C2.3 15.7 2.5 15.9 2.7 16C2.9 16.1 3.1 16.2 3.3 16.3C3.6 16.4 3.8 16.4 4.1 16.4C4.4 16.4 4.7 16.4 5 16.3C5.2 16.2 5.5 16.1 5.7 15.9C5.9 15.8 6.1 15.6 6.3 15.4C6.5 15.2 6.7 15 6.9 14.8C7.1 14.6 7.3 14.4 7.4 14.1C7.6 13.9 7.7 13.7 7.8 13.4C7.9 13.2 8 12.9 8 12.7C8 12.5 8 12.2 7.9 12C7.8 11.8 7.7 11.6 7.6 11.4C7.5 11.2 7.3 11 7.1 10.9C6.9 10.8 6.7 10.7 6.5 10.6C6.2 10.5 5.9 10.5 5.6 10.5C5.3 10.5 5 10.5 4.7 10.6C4.4 10.6 4.1 10.7 3.8 10.8C3.6 10.9 3.3 11 3.1 11.1C2.9 11.2 2.7 11.4 2.5 11.5C2.3 11.7 2.1 11.9 2 12.1C1.9 12.3 1.8 12.5 1.7 12.8C1.6 13 1.6 13.3 1.6 13.6C1.6 13.9 1.6 14.2 1.7 14.5C1.8 14.8 1.9 15.1 2.1 15.4C2.3 15.7 2.5 15.9 2.8 16.1C3.1 16.3 3.4 16.4 3.7 16.5C4 16.6 4.3 16.7 4.7 16.7C5 16.7 5.3 16.7 5.6 16.6C5.9 16.5 6.2 16.4 6.5 16.3C6.8 16.2 7.1 16 7.3 15.8C7.6 15.6 7.8 15.4 8 15.2C8.2 15 8.4 14.7 8.5 14.4C8.7 14.1 8.8 13.8 8.9 13.5C9 13.2 9 12.9 9 12.6C9 12.3 9 12 8.9 11.7C8.8 11.4 8.7 11.2 8.5 11C8.3 10.8 8.1 10.6 7.9 10.4C7.7 10.3 7.4 10.2 7.2 10.1C6.9 10 6.6 10 6.3 10C6 10 5.7 10 5.4 10.1C5.1 10.1 4.8 10.2 4.5 10.3C4.3 10.4 4 10.5 3.8 10.6C3.6 10.7 3.4 10.9 3.2 11.1C3 11.3 2.8 11.5 2.7 11.7C2.6 11.9 2.5 12.1 2.4 12.4C2.3 12.6 2.3 12.9 2.3 13.2C2.3 13.5 2.3 13.8 2.4 14.1C2.5 14.4 2.6 14.7 2.8 15C3 15.3 3.2 15.5 3.5 15.7C3.8 15.9 4.1 16.1 4.4 16.2C4.7 16.3 5.1 16.4 5.4 16.4C5.7 16.4 6.1 16.4 6.4 16.3C6.7 16.2 7 16.1 7.3 16C7.6 15.9 7.9 15.7 8.1 15.5C8.4 15.3 8.6 15.1 8.8 14.9C9 14.7 9.2 14.4 9.3 14.2C9.4 14 9.5 13.7 9.6 13.5C9.7 13.3 9.7 13 9.8 12.8C9.8 12.6 9.8 12.4 9.8 12.2C9.8 12 9.8 11.8 9.7 11.6C9.6 11.4 9.5 11.2 9.4 11C9.3 10.8 9.2 10.6 9 10.5C8.8 10.4 8.6 10.3 8.4 10.2C8.2 10.1 8 10 7.7 10C7.5 10 7.2 10 7 10.1C6.8 10.1 6.5 10.2 6.3 10.3C6.1 10.4 5.9 10.5 5.7 10.6C5.5 10.7 5.3 10.9 5.1 11.1C4.9 11.3 4.8 11.5 4.7 11.7C4.6 11.9 4.5 12.1 4.4 12.4C4.3 12.6 4.3 12.9 4.3 13.2C4.3 13.5 4.3 13.8 4.4 14.1C4.5 14.4 4.6 14.7 4.8 15C5 15.3 5.2 15.5 5.5 15.7C5.8 15.9 6.1 16.1 6.4 16.2C6.7 16.3 7.1 16.4 7.4 16.4C7.7 16.4 8.1 16.4 8.4 16.3C8.7 16.2 9 16.1 9.3 16C9.6 15.9 9.9 15.7 10.2 15.5C10.5 15.3 10.7 15.1 10.9 14.9C11.1 14.7 11.3 14.5 11.5 14.3C11.7 14.1 11.8 13.9 12 13.7C12.1 13.5 12.2 13.3 12.3 13.1C12.4 12.9 12.5 12.7 12.5 12.5Z" fill="currentColor"/>
+                        </svg>
                     </a>
-                    <a href="https://github.com/projectZ678" target="">
-                        <img src="" alt="" class="">
-                    </a>
-                    <a href="https://www.youtube.com/@jaqliv" target="_blank">
-                        <img src="assets/" alt="" class="">
-                    </a>
-                    <a href="https://www.tiktok.com/@rdm.sxin" target="_blank">
-                        <img src="assets/tiktok.png" alt="TikTok" class="social-icon">
+                    
+                    <a href="https://www.tiktok.com/@rdm.sxin" target="_blank" class="social-link tiktok">
+                        <svg class="social-icon" viewBox="0 0 24 24" fill="none">
+                            <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" fill="currentColor"/>
+                        </svg>
                     </a>
                 </div>
 
+                <div class="profile-footer">
+                    <div class="visitor-counter">
+                        <svg class="visitor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        <span id="visitor-count">1,024</span>
+                    </div>
+                </div>
+            </div>
 
-                <div class="visitor-counter">
-                    <svg class="visitor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                    </svg>
-                    <span id="visitor-count">10</span>
-                    <span class="tooltip">Views</span>
+            <!-- Skills Block -->
+            <div id="skills-block" class="hidden">
+                <h2 class="skills-title">Programming Skills</h2>
+                <div class="skill">
+                    <div class="skill-header">
+                        <div class="skill-name">
+                            <img src="assets/python.png" alt="Python" class="skill-icon">
+                            <span>Python</span>
+                        </div>
+                        <span>87%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div id="python-bar" class="skill-progress" style="background: linear-gradient(90deg, #306998, #4B8BBE);"></div>
+                    </div>
+                </div>
+                <div class="skill">
+                    <div class="skill-header">
+                        <div class="skill-name">
+                            <img src="assets/cpp.png" alt="C++" class="skill-icon">
+                            <span>C++</span>
+                        </div>
+                        <span>75%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div id="cpp-bar" class="skill-progress" style="background: linear-gradient(90deg, #004482, #659AD2);"></div>
+                    </div>
+                </div>
+                <div class="skill">
+                    <div class="skill-header">
+                        <div class="skill-name">
+                            <img src="assets/csharp.png" alt="C#" class="skill-icon">
+                            <span>C#</span>
+                        </div>
+                        <span>80%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div id="csharp-bar" class="skill-progress" style="background: linear-gradient(90deg, #178600, #239A3B);"></div>
+                    </div>
                 </div>
             </div>
         </div>
 
-
-        <div id="skills-block" class="hidden">
-            <h2 class="skills-title">Programming Skills</h2>
-            <div class="skill">
-                <div class="skill-name">
-                    <img src="assets/python.png" alt="Python" class="skill-icon">
-                    <span>Python</span>
-                    <span>87%</span>
-                </div>
-                <div class="skill-bar-container">
-                    <div id="python-bar" class="skill-bar"></div>
-                </div>
-            </div>
-            <div class="skill">
-                <div class="skill-name">
-                    <img src="assets/cpp.png" alt="C++" class="skill-icon">
-                    <span>C++</span>
-                    <span>75%</span>
-                </div>
-                <div class="skill-bar-container">
-                    <div id="cpp-bar" class="skill-bar"></div>
-                </div>
-            </div>
-            <div class="skill">
-                <div class="skill-name">
-                    <img src="assets/csharp.png" alt="C#" class="skill-icon">
-                    <span>C#</span>
-                    <span>80%</span>
-                </div>
-                <div class="skill-bar-container">
-                    <div id="csharp-bar" class="skill-bar"></div>
-                </div>
-            </div>
-        </div>
-
-
+        <!-- Results Button -->
         <div id="results-button-container" class="hidden">
-            <button id="results-theme">View Results</button>
-            <div id="results-hint" class="hidden">Click again to return to profile</div>
+            <button id="results-theme">View Skills</button>
         </div>
 
-
-        <div class="controls">
-        </div>
-
-
-        <div class="top-controls">
-            <div class="volume-control">
-                <svg id="volume-icon" class="volume-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <div class="theme-selector">
+            </div>
+            
+            <div class="control-group">
+                <svg class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
                 </svg>
                 <input id="volume-slider" class="slider" type="range" min="0" max="1" step="0.01" value="0.3">
             </div>
-            <div class="transparency-control">
-                <svg class="transparency-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+
+            <div class="control-group">
+                <svg class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                 </svg>
@@ -1016,7 +837,7 @@
         </div>
     </div>
 
-
+    <!-- Audio Elements -->
     <audio id="background-music" loop>
         <source src="assets/Bitcoin.mp3" type="audio/mp3">
     </audio>
@@ -1033,10 +854,10 @@
         <source src="assets/Bitcoin.mp3" type="audio/mp3">
     </audio>
 
-
+    <!-- GSAP Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-
+    <!-- Main Script -->
     <script src="script.js"></script>
 </body>
 </html>
