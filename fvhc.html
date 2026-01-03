@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <!-- Discord Embed Meta Tags -->
+    <meta property="og:title" content="@fvhc">
+    <meta property="og:description" content="Cyber security enthusiast • Full-stack developer • Open-source contributor">
+    <meta property="og:image" content="https://i.pinimg.com/736x/1e/47/c6/1e47c6103ab374b365df154d76b79595.jpg">
+    <meta property="og:url" content="https://yourdomain.com">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="fvhc">
+    <meta name="theme-color" content="#000000">
+   
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@fvhc">
+    <meta name="twitter:description" content="Cyber security enthusiast • Full-stack developer • Open-source contributor">
+    <meta name="twitter:image" content="https://i.pinimg.com/736x/1e/47/c6/1e47c6103ab374b365df154d76b79595.jpg">
+   
+    <title>@fvhc</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Courier New', monospace;
+        }
+        body {
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+            min-height: 100vh;
+            cursor: url('') 0 0, auto !important;
+        }
+        /* Custom Cursor Fallback (for touch devices or if image fails) */
+        .custom-cursor {
+            position: fixed;
+            width: 64px;
+            height: 64px;
+            background: url('') no-repeat center center;
+            background-size: contain;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-10%, -10%);
+            animation: cursorFloat 4s ease-in-out infinite;
+        }
+        body:not(.touch-device) * {
+            cursor: url('https://toppng.com/uploads/preview/hello-kitty-11549476722kggz61ch9p.png') 0 0, auto !important;
+        }
+        /* Container & Background */
+        .container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+        #background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            pointer-events: none;
+            filter: brightness(0.7);
+        }
+        /* Floating Heart Particles (Animated Background Effect) */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .particle {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0.6;
+            animation: floatUp 15s linear infinite;
+            color: #ff69b4;
+        }
+        /* Overlays */
+        .glitch-overlay,
+        #hacker-overlay,
+        #snow-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        /* Main Content Container */
+        .main-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(90%, 700px);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+        /* Profile Card with Float Animation */
+        #profile-block {
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 2.5rem;
+            border-radius: 20px;
+            width: 100%;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            animation: cardFloat 6s ease-in-out infinite, fadeIn 1s forwards;
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .profile-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            flex-shrink: 0;
+        }
+        .profile-container::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ff69b4 0%, transparent 70%);
+            animation: orbit 4s linear infinite;
+            z-index: -1;
+            opacity: 0.6;
+        }
+        .profile-picture {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+        .profile-picture:hover {
+            transform: scale(1.1) rotate(5deg);
+            animation: bounce 0.6s ease;
+        }
+        /* Typography */
+        @font-face {
+            font-family: 'Angel Wish';
+            src: url('assets/Angel_wish.ttf') format('truetype');
+        }
+        #profile-name {
+            font-family: 'Angel Wish', 'Courier New', monospace;
+            font-size: 2.8rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+        .fvhc-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(255, 105, 180, 0.3), rgba(255, 192, 203, 0.3));
+            color: #fff;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .fvhc-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+        }
+        #profile-bio {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 1rem 0;
+            font-weight: 300;
+        }
+        /* Separator */
+        .bio-separator {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            margin: 2rem 0;
+        }
+        /* Social Links */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .social-link {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease;
+        }
+        .social-icon {
+            width: 32px;
+            height: 32px;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 8px currentColor);
+        }
+        .social-link.tiktok .social-icon { color: #ff0050; filter: drop-shadow(0 0 8px #ff0050); }
+        .social-link:hover {
+            transform: translateY(-8px) scale(1.2);
+            animation: bounce 0.6s ease;
+        }
+        .social-link:hover .social-icon {
+            transform: scale(1.3);
+        }
+        /* Footer */
+        .profile-footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .visitor-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .visitor-counter:hover {
+            background: rgba(255, 105, 180, 0.2);
+            transform: translateY(-2px);
+        }
+        /* Controls Panel */
+        .controls-panel {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 300px;
+            justify-content: center;
+        }
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .slider {
+            width: 80px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 2px;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ff69b4;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.6);
+        }
+        /* Start Screen */
+        #start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            cursor: pointer;
+            opacity: 1;
+            transition: opacity 0.8s ease;
+        }
+        #start-text {
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        /* Animations */
+        @keyframes orbit {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 105, 180, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(255, 105, 180, 0.8); }
+        }
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes cursorFloat {
+            0%, 100% { transform: translate(-10%, -10%) translateY(0); }
+            50% { transform: translate(-10%, -10%) translateY(-5px); }
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content { width: 95%; }
+            #profile-block { padding: 1.5rem; }
+            .profile-header { flex-direction: column; text-align: center; gap: 1.5rem; }
+            .profile-container { width: 120px; height: 120px; }
+            #profile-name { font-size: 2rem; }
+            .controls-panel { flex-direction: column; gap: 1rem; padding: 1rem; min-width: 250px; }
+        }
+    </style>
+</head>
+<body class="home-theme" onload="initMedia()">
+   
+    <div class="custom-cursor"></div>
+    
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Start Screen -->
+    <div id="start-screen">
+        <div id="start-text">Click anywhere to enter ♡</div>
+    </div>
+    
+    <div class="container">
+        <!-- Background Image -->
+        <img id="background" src="https://i.pinimg.com/736x/1e/47/c6/1e47c6103ab374b365df154d76b79595.jpg" alt="Background">
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div id="profile-block">
+                <div class="profile-header">
+                    <div class="profile-container">
+                        <img src="https://i.pinimg.com/736x/f0/39/1b/f0391bddf7dec54df2b3cb3e3fac6235.jpg" alt="Profile" class="profile-picture">
+                    </div>
+                    <div class="profile-info">
+                        <h1 id="profile-name">@fvhc</h1>
+                        <div class="fvhc-tag">UZI BANK</div>
+                        <p id="profile-bio">Cyber security enthusiast • Full-stack developer • Open-source contributor</p>
+                    </div>
+                </div>
+                <div class="bio-separator"></div>
+                <div class="social-links">
+                    </a>
+                    <a href="https://www.tiktok.com/@uziovpercs" target="_blank" class="social-link tiktok">
+                        <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="profile-footer">
+                    <div class="visitor-counter">
+                        <svg class="visitor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                        <span id="visitor-count">1,024</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <div class="control-group">
+                <svg class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+                </svg>
+                <input id="volume-slider" class="slider" type="range" min="0" max="1" step="0.01" value="0.3">
+            </div>
+            <div class="control-group">
+                <svg class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+                <input id="transparency-slider" class="slider" type="range" min="0" max="1" step="0.01" value="0.7">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Audio -->
+    <audio id="background-music" loop>
+        <source src="assets/fer.mp3" type="audio/mp3">
+    </audio>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <script>
+        function initMedia() {
+            const backgroundMusic = document.getElementById('background-music');
+            backgroundMusic.volume = 0.3;
+            backgroundMusic.play().catch(e => console.log("Autoplay prevented:", e));
+        }
+
+        // Generate floating hearts
+        function createParticles() {
+            const particles = document.getElementById('particles');
+            const hearts = ['♡', '♥', '💕', '🌸'];
+            for (let i = 0; i < 15; i++) {
+                const p = document.createElement('div');
+                p.classList.add('particle');
+                p.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.animationDelay = Math.random() * 15 + 's';
+                p.style.animationDuration = 10 + Math.random() * 10 + 's';
+                particles.appendChild(p);
+            }
+        }
+
+        // Start screen
+        document.getElementById('start-screen').addEventListener('click', function() {
+            gsap.to(this, {
+                opacity: 0,
+                duration: 0.8,
+                onComplete: () => {
+                    this.style.display = 'none';
+                    document.getElementById('profile-block').style.opacity = 1;
+                    createParticles();
+                }
+            });
+        });
+
+        // Volume control
+        document.getElementById('volume-slider').addEventListener('input', function(e) {
+            document.getElementById('background-music').volume = parseFloat(e.target.value);
+        });
+
+        // Transparency control
+        document.getElementById('transparency-slider').addEventListener('input', function(e) {
+            document.getElementById('profile-block').style.opacity = parseFloat(e.target.value);
+        });
+
+        // Custom cursor follow (fallback for touch)
+        document.addEventListener('mousemove', function(e) {
+            const cursor = document.querySelector('.custom-cursor');
+            if (cursor) {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            }
+        });
+
+        // Touch device
+        if ('ontouchstart' in window || navigator.maxTouchPoints) {
+            document.body.classList.add('touch-device');
+        }
+    </script>
+</body>
+</html>
