@@ -4,9 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - socialanxiety.lol</title>
-    <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js"></script>
+    <script>
+        // INLINE CONFIG - Put your REAL credentials here
+        const SUPABASE_URL = 'https://YOUR-PROJECT-ID.supabase.co';
+        const SUPABASE_ANON_KEY = 'YOUR-ANON-KEY';
+        
+        // Initialize Supabase immediately
+        const { createClient } = window.supabase;
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Make globally available
+        window.supabaseClient = supabase;
+        console.log('Supabase loaded');
+    </script>
     <style>
         * {
             margin: 0;
@@ -15,9 +26,9 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: #000000;
-            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000;
+            color: #fff;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -25,79 +36,43 @@
             padding: 20px;
         }
 
-        .signup-container {
+        .container {
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
         }
 
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #888;
-            text-decoration: none;
-            font-size: 14px;
-            margin-bottom: 30px;
-            padding: 8px 16px;
+        .card {
+            background: #111;
             border: 1px solid #333;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .back-link:hover {
-            color: #fff;
-            border-color: #666;
-            background: rgba(255,255,255,0.05);
-        }
-
-        .signup-card {
-            background: rgba(10, 10, 10, 0.95);
-            border: 1px solid #222;
-            border-radius: 16px;
-            padding: 40px 35px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            position: relative;
-            backdrop-filter: blur(10px);
-        }
-
-        .signup-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #666, transparent);
+            border-radius: 12px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
         .logo {
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 30px;
         }
 
         .logo h1 {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 800;
-            letter-spacing: -0.5px;
             background: linear-gradient(135deg, #fff 0%, #aaa 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
+            margin-bottom: 10px;
         }
 
-        .tagline {
-            text-align: center;
+        .logo p {
             color: #888;
             font-size: 14px;
-            margin-bottom: 35px;
-            letter-spacing: 0.5px;
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
-        .form-label {
+        label {
             display: block;
             margin-bottom: 8px;
             color: #aaa;
@@ -107,48 +82,62 @@
             letter-spacing: 1px;
         }
 
-        .form-input {
+        input {
             width: 100%;
-            padding: 14px 16px;
-            background: rgba(255,255,255,0.03);
+            padding: 14px;
+            background: rgba(255,255,255,0.05);
             border: 1px solid #333;
             border-radius: 8px;
             color: #fff;
             font-size: 15px;
-            transition: all 0.3s ease;
             font-family: inherit;
         }
 
-        .form-input:focus {
+        input:focus {
             outline: none;
             border-color: #666;
-            background: rgba(255,255,255,0.05);
-            box-shadow: 0 0 0 2px rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.08);
         }
 
         .url-preview {
             background: rgba(255,255,255,0.03);
             border: 1px solid #333;
             border-radius: 6px;
-            padding: 12px 15px;
+            padding: 10px;
             margin-top: 10px;
-            font-family: 'Monaco', 'Menlo', monospace;
+            font-family: monospace;
             font-size: 14px;
             color: #888;
         }
 
-        .url-preview .highlight {
+        .highlight {
             color: #fff;
             font-weight: 600;
         }
 
-        .password-hint {
-            font-size: 12px;
-            color: #666;
-            margin-top: 8px;
+        .error {
+            background: rgba(255, 50, 50, 0.1);
+            border: 1px solid rgba(255, 50, 50, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 20px 0;
+            color: #ff3232;
+            font-size: 14px;
+            display: none;
         }
 
-        .submit-btn {
+        .success {
+            background: rgba(50, 255, 50, 0.1);
+            border: 1px solid rgba(50, 255, 50, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 20px 0;
+            color: #32ff32;
+            font-size: 14px;
+            display: none;
+        }
+
+        button {
             width: 100%;
             padding: 16px;
             background: #fff;
@@ -157,71 +146,18 @@
             border-radius: 8px;
             font-size: 15px;
             font-weight: 700;
-            letter-spacing: 0.5px;
             cursor: pointer;
-            transition: all 0.3s ease;
             margin-top: 10px;
-            text-transform: uppercase;
+            font-family: inherit;
         }
 
-        .submit-btn:hover {
+        button:hover {
             background: #f0f0f0;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255,255,255,0.1);
         }
 
-        .submit-btn:disabled {
+        button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-
-        .error-message {
-            background: rgba(255, 75, 75, 0.1);
-            border: 1px solid rgba(255, 75, 75, 0.3);
-            border-radius: 8px;
-            padding: 12px 15px;
-            margin-top: 20px;
-            color: #ff4b4b;
-            font-size: 14px;
-            display: none;
-        }
-
-        .success-message {
-            background: rgba(75, 255, 100, 0.1);
-            border: 1px solid rgba(75, 255, 100, 0.3);
-            border-radius: 8px;
-            padding: 12px 15px;
-            margin-top: 20px;
-            color: #4bff64;
-            font-size: 14px;
-            display: none;
-        }
-
-        .divider {
-            text-align: center;
-            margin: 30px 0;
-            position: relative;
-        }
-
-        .divider::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: #333;
-        }
-
-        .divider span {
-            background: #0a0a0a;
-            padding: 0 15px;
-            color: #666;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .login-link {
@@ -235,67 +171,59 @@
             color: #fff;
             text-decoration: none;
             font-weight: 600;
-            transition: color 0.3s ease;
         }
 
         .login-link a:hover {
-            color: #aaa;
+            text-decoration: underline;
         }
 
-        /* Loading spinner */
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(0,0,0,0.3);
-            border-radius: 50%;
-            border-top-color: #000;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
-            vertical-align: middle;
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .back-link:hover {
+            color: #fff;
         }
     </style>
 </head>
 <body>
-    <div class="signup-container">
-        <a href="index.html" class="back-link">← Back to Home</a>
-        
-        <div class="signup-card">
+    <a href="index.html" class="back-link">← Back</a>
+    
+    <div class="container">
+        <div class="card">
             <div class="logo">
                 <h1>socialanxiety.lol</h1>
+                <p>Create your account</p>
             </div>
-            <p class="tagline">Create your account and get your personal profile</p>
 
             <form id="signupForm">
                 <div class="form-group">
-                    <label class="form-label">Username</label>
-                    <input type="text" id="username" class="form-input" placeholder="choose your username" required minlength="3" maxlength="20">
+                    <label>Username</label>
+                    <input type="text" id="username" placeholder="username" required>
                     <div class="url-preview">
                         socialanxiety.lol/<span class="highlight" id="usernamePreview">username</span>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" id="email" class="form-input" placeholder="your@email.com" required>
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="your@email.com" required>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" id="password" class="form-input" placeholder="minimum 8 characters" required minlength="8">
-                    <div class="password-hint">Use at least 8 characters with letters and numbers</div>
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="min 8 characters" required minlength="8">
                 </div>
 
-                <div id="errorMessage" class="error-message"></div>
-                <div id="successMessage" class="success-message"></div>
+                <div id="error" class="error"></div>
+                <div id="success" class="success"></div>
 
-                <button type="submit" class="submit-btn" id="submitBtn">
-                    <span id="btnText">Create Account</span>
-                </button>
+                <button type="submit" id="submitBtn">Create Account</button>
             </form>
 
             <div class="login-link">
@@ -319,10 +247,9 @@
             const username = document.getElementById('username').value.trim().toLowerCase();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
-            const errorEl = document.getElementById('errorMessage');
-            const successEl = document.getElementById('successMessage');
+            const errorEl = document.getElementById('error');
+            const successEl = document.getElementById('success');
             const submitBtn = document.getElementById('submitBtn');
-            const btnText = document.getElementById('btnText');
             
             // Clear messages
             errorEl.style.display = 'none';
@@ -330,34 +257,31 @@
             errorEl.textContent = '';
             successEl.textContent = '';
             
-            // Validate username
+            // Validate
             if (!/^[a-z0-9_]{3,20}$/.test(username)) {
-                errorEl.textContent = 'Username must be 3-20 characters (letters, numbers, underscores only)';
-                errorEl.style.display = 'block';
+                showError('Username: 3-20 letters/numbers/underscores only');
                 return;
             }
             
-            // Disable button and show loading
+            // Disable button
             submitBtn.disabled = true;
-            btnText.innerHTML = '<span class="spinner"></span> Creating Account...';
+            submitBtn.textContent = 'Creating...';
             
             try {
-                console.log('Starting signup process...');
+                console.log('Starting signup...');
                 
-                // 1. First check if username exists
-                console.log('Checking if username exists:', username);
-                const { data: existingProfile, error: checkError } = await supabase
+                // 1. Check if username exists
+                console.log('Checking username:', username);
+                const { data: existing, error: checkError } = await supabase
                     .from('profiles')
                     .select('username')
                     .eq('username', username)
                     .maybeSingle();
                 
-                if (checkError) {
-                    console.error('Error checking username:', checkError);
-                }
+                if (checkError) console.error('Check error:', checkError);
                 
-                if (existingProfile) {
-                    throw new Error('Username is already taken. Please choose another.');
+                if (existing) {
+                    throw new Error('Username taken');
                 }
                 
                 // 2. Create auth user
@@ -366,24 +290,16 @@
                     email: email,
                     password: password,
                     options: {
-                        data: {
-                            username: username
-                        }
+                        data: { username: username }
                     }
                 });
                 
-                if (authError) {
-                    console.error('Auth error:', authError);
-                    throw authError;
-                }
+                if (authError) throw authError;
+                if (!authData.user) throw new Error('No user created');
                 
-                if (!authData.user) {
-                    throw new Error('Failed to create user account');
-                }
+                console.log('User created:', authData.user.id);
                 
-                console.log('Auth user created:', authData.user.id);
-                
-                // 3. Create profile in database
+                // 3. Create profile
                 console.log('Creating profile...');
                 const { error: profileError } = await supabase
                     .from('profiles')
@@ -393,73 +309,74 @@
                             username: username,
                             email: email,
                             bio: '',
-                            avatar_url: null,
-                            banner_url: null,
-                            mp3_url: null,
                             created_at: new Date().toISOString()
                         }
                     ]);
                 
                 if (profileError) {
-                    console.error('Profile creation error:', profileError);
-                    
-                    // Try to delete the auth user if profile creation failed
+                    console.error('Profile error:', profileError);
+                    // Try to clean up
                     try {
                         await supabase.auth.admin.deleteUser(authData.user.id);
-                    } catch (deleteError) {
-                        console.error('Failed to delete auth user:', deleteError);
+                    } catch (e) {
+                        console.error('Cleanup failed:', e);
                     }
-                    
                     throw profileError;
                 }
                 
-                console.log('Profile created successfully!');
+                console.log('Profile created!');
                 
-                // 4. Success!
-                successEl.textContent = 'Account created successfully! Redirecting to dashboard...';
+                // Success
+                successEl.textContent = '✓ Account created! Redirecting...';
                 successEl.style.display = 'block';
                 
-                // Store user session
+                // Store session
                 localStorage.setItem('user', JSON.stringify({
                     id: authData.user.id,
                     email: authData.user.email,
                     username: username
                 }));
                 
-                // Redirect to dashboard after 2 seconds
+                // Redirect
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
-                }, 2000);
+                }, 1500);
                 
             } catch (error) {
-                console.error('Signup error:', error);
+                console.error('Signup failed:', error);
                 
-                // Show error message
-                let errorMessage = error.message;
-                
-                // Handle specific error cases
-                if (errorMessage.includes('already registered')) {
-                    errorMessage = 'This email is already registered. Please login instead.';
-                } else if (errorMessage.includes('Password should')) {
-                    errorMessage = 'Password should be at least 8 characters.';
-                } else if (errorMessage.includes('Invalid email')) {
-                    errorMessage = 'Please enter a valid email address.';
+                let message = error.message;
+                if (message.includes('already registered')) {
+                    message = 'Email already registered. Login instead.';
+                } else if (message.includes('Password')) {
+                    message = 'Password must be at least 8 characters.';
+                } else if (message.includes('Invalid')) {
+                    message = 'Invalid email format.';
+                } else if (message.includes('taken')) {
+                    message = 'Username taken. Try another.';
                 }
                 
-                errorEl.textContent = errorMessage;
-                errorEl.style.display = 'block';
-                
-                // Reset button
+                showError(message);
                 submitBtn.disabled = false;
-                btnText.textContent = 'Create Account';
+                submitBtn.textContent = 'Create Account';
             }
         });
 
-        // Check if user is already logged in
+        function showError(message) {
+            const errorEl = document.getElementById('error');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+
+        // Check if already logged in
         document.addEventListener('DOMContentLoaded', async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                window.location.href = 'dashboard.html';
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    window.location.href = 'dashboard.html';
+                }
+            } catch (error) {
+                console.log('No session found');
             }
         });
     </script>
