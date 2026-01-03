@@ -15,53 +15,88 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             background: #000000;
             color: #ffffff;
             min-height: 100vh;
         }
 
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Dashboard layout */
         .dashboard-layout {
             display: grid;
-            grid-template-columns: 250px 1fr;
+            grid-template-columns: 260px 1fr;
             min-height: 100vh;
         }
 
+        /* Sidebar */
         .sidebar {
             background: #0a0a0a;
-            border-right: 1px solid #333;
-            padding: 2rem 0;
+            border-right: 1px solid #222;
             position: fixed;
             left: 0;
             top: 0;
             bottom: 0;
-            width: 250px;
-            overflow-y: auto;
+            width: 260px;
+            display: flex;
+            flex-direction: column;
         }
 
         .sidebar-header {
-            padding: 0 1.5rem 2rem;
-            border-bottom: 1px solid #333;
-            margin-bottom: 2rem;
+            padding: 30px 25px;
+            border-bottom: 1px solid #222;
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #aaa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            padding: 25px;
+            border-bottom: 1px solid #222;
         }
 
         .user-avatar {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             background: #222;
-            border: 2px solid #444;
+            margin-bottom: 15px;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border: 2px solid #333;
         }
 
         .user-avatar img {
@@ -71,243 +106,326 @@
         }
 
         .user-details h3 {
-            font-size: 1.1rem;
+            font-size: 18px;
             font-weight: 600;
-            margin-bottom: 0.3rem;
+            margin-bottom: 5px;
         }
 
         .user-details p {
-            font-size: 0.85rem;
-            color: #666;
+            color: #888;
+            font-size: 14px;
         }
 
         .sidebar-nav {
-            list-style: none;
-            padding: 0 1rem;
+            padding: 20px 0;
+            flex: 1;
         }
 
-        .sidebar-nav li {
-            margin-bottom: 0.5rem;
-        }
-
-        .sidebar-nav a {
+        .nav-item {
+            padding: 12px 25px;
             display: flex;
             align-items: center;
-            gap: 1rem;
-            padding: 0.8rem 1rem;
-            color: #999;
+            gap: 12px;
+            color: #888;
             text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
+            font-size: 14px;
             font-weight: 500;
+            transition: all 0.3s ease;
             cursor: pointer;
+            border-left: 3px solid transparent;
         }
 
-        .sidebar-nav a:hover,
-        .sidebar-nav a.active {
-            background: #222;
-            color: #ffffff;
+        .nav-item:hover {
+            background: rgba(255,255,255,0.03);
+            color: #fff;
         }
 
-        .profile-link-card {
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 2rem 1rem 0;
+        .nav-item.active {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            border-left-color: #fff;
+        }
+
+        .profile-link {
+            padding: 25px;
+            border-top: 1px solid #222;
+        }
+
+        .profile-link-label {
+            color: #888;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
         }
 
         .profile-url {
-            font-family: monospace;
-            color: #ffffff;
-            font-size: 0.85rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            color: #fff;
             word-break: break-all;
         }
 
+        .profile-url a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .profile-url a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main content */
         .main-content {
-            margin-left: 250px;
-            padding: 2rem;
+            margin-left: 260px;
+            padding: 30px;
         }
 
         .content-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid #333;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #222;
         }
 
         .content-header h1 {
-            font-size: 1.8rem;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #fff;
+            border: 1px solid #333;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: #666;
+        }
+
+        /* Dashboard content */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            font-size: 18px;
             font-weight: 600;
         }
 
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .dashboard-card {
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 15px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .dashboard-card:hover {
-            border-color: #444;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
-        }
-
+        /* Profile preview */
         .profile-preview {
-            border: 1px solid #333;
-            border-radius: 15px;
+            border-radius: 10px;
             overflow: hidden;
-            background: #0a0a0a;
+            background: #111;
+            border: 1px solid #222;
         }
 
-        .banner-preview {
-            height: 150px;
+        .profile-banner {
+            height: 120px;
             background: linear-gradient(45deg, #222, #333);
             position: relative;
         }
 
-        .avatar-preview {
+        .profile-avatar {
             position: absolute;
             bottom: -40px;
-            left: 1.5rem;
-            width: 100px;
-            height: 100px;
+            left: 25px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            border: 4px solid #0a0a0a;
+            border: 4px solid #111;
             background: #222;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             overflow: hidden;
         }
 
-        .avatar-preview img {
+        .profile-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .profile-info {
-            padding: 4rem 1.5rem 1.5rem;
+        .profile-details {
+            padding: 50px 25px 25px;
         }
 
-        .username-display {
-            font-size: 1.5rem;
+        .profile-details h3 {
+            font-size: 20px;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 8px;
         }
 
-        .bio-display {
-            color: #999;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 1rem;
+        .profile-details p {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.5;
         }
 
-        .form-group {
-            margin-bottom: 1.5rem;
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #999;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            background: #0a0a0a;
-            border: 1px solid #333;
+        .stat-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid #222;
             border-radius: 8px;
-            color: #ffffff;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
+            padding: 15px;
+            text-align: center;
         }
 
-        .form-control:focus {
-            outline: none;
-            border-color: #ffffff;
-            background: #111;
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
         }
 
-        textarea.form-control {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.8rem 1.5rem;
-            background: #ffffff;
-            color: #000000;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
+        .stat-label {
+            color: #888;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.9);
-            transform: translateY(-2px);
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
         }
 
-        .upload-area {
-            border: 2px dashed #444;
-            border-radius: 15px;
-            padding: 3rem 2rem;
-            text-align: center;
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aaa;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
             transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #666;
+            background: rgba(255,255,255,0.05);
+        }
+
+        textarea.form-input {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-help {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* File upload */
+        .upload-area {
+            border: 2px dashed #333;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
             cursor: pointer;
-            position: relative;
+            transition: all 0.3s ease;
         }
 
         .upload-area:hover {
             border-color: #666;
-            background: #111;
+            background: rgba(255,255,255,0.03);
         }
 
+        .upload-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #666;
+        }
+
+        /* Audio player */
         .audio-player {
-            background: #111;
+            background: rgba(255,255,255,0.03);
             border: 1px solid #333;
-            border-radius: 15px;
-            padding: 1.5rem;
+            border-radius: 8px;
+            padding: 20px;
         }
 
         .player-controls {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 1rem;
+            gap: 15px;
+            margin-bottom: 15px;
         }
 
         .play-btn {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            background: #ffffff;
-            color: #000000;
+            background: #fff;
+            color: #000;
             border: none;
             display: flex;
             align-items: center;
@@ -317,11 +435,12 @@
         }
 
         .play-btn:hover {
-            background: rgba(255, 255, 255, 0.9);
-            transform: scale(1.1);
+            background: #f0f0f0;
+            transform: scale(1.05);
         }
 
-        @media (max-width: 768px) {
+        /* Responsive */
+        @media (max-width: 1024px) {
             .dashboard-layout {
                 grid-template-columns: 1fr;
             }
@@ -335,48 +454,78 @@
             .main-content {
                 margin-left: 0;
             }
-            
-            .content-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
             }
             
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-layout">
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div>Loading dashboard...</div>
+    </div>
+
+    <div id="dashboardContent" class="dashboard-layout" style="display: none;">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="user-info">
-                    <div class="user-avatar" id="userAvatar">
-                        <!-- Avatar loaded via JS -->
-                    </div>
-                    <div class="user-details">
-                        <h3 id="dashboardUsername">Loading...</h3>
-                        <p id="dashboardEmail">...</p>
-                    </div>
+                <h2>socialanxiety.lol</h2>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">
+                    <!-- Avatar will be loaded here -->
+                </div>
+                <div class="user-details">
+                    <h3 id="userName">Loading...</h3>
+                    <p id="userEmail">...</p>
                 </div>
             </div>
             
-            <ul class="sidebar-nav">
-                <li><a onclick="showTab('overview')" class="active">📊 Overview</a></li>
-                <li><a onclick="showTab('profile')">👤 Edit Profile</a></li>
-                <li><a onclick="showTab('appearance')">🎨 Appearance</a></li>
-                <li><a onclick="showTab('audio')">🎵 Audio</a></li>
-                <li><a onclick="showTab('settings')">⚙️ Settings</a></li>
-                <li><a onclick="handleLogout()">🚪 Logout</a></li>
-            </ul>
+            <div class="sidebar-nav">
+                <a class="nav-item active" onclick="showTab('overview')">
+                    📊 Overview
+                </a>
+                <a class="nav-item" onclick="showTab('profile')">
+                    👤 Edit Profile
+                </a>
+                <a class="nav-item" onclick="showTab('appearance')">
+                    🎨 Appearance
+                </a>
+                <a class="nav-item" onclick="showTab('audio')">
+                    🎵 Audio
+                </a>
+                <a class="nav-item" onclick="showTab('settings')">
+                    ⚙️ Settings
+                </a>
+                <a class="nav-item" onclick="logout()">
+                    🚪 Logout
+                </a>
+            </div>
             
-            <div class="profile-link-card">
-                <div style="font-size: 12px; color: #666; margin-bottom: 8px;">Your Profile URL:</div>
+            <div class="profile-link">
+                <div class="profile-link-label">Your Profile URL</div>
                 <div class="profile-url">
-                    <a href="" id="profileLink" target="_blank" style="color: white; text-decoration: none;">socialanxiety.lol/...</a>
+                    <a href="#" id="profileUrl" target="_blank">socialanxiety.lol/...</a>
                 </div>
             </div>
         </aside>
@@ -387,25 +536,57 @@
             <div id="overviewTab" class="dashboard-tab">
                 <div class="content-header">
                     <h1>Dashboard</h1>
-                    <button class="btn" onclick="viewProfile()">View Public Profile</button>
+                    <div class="header-actions">
+                        <button class="btn btn-outline" onclick="viewProfile()">View Profile</button>
+                        <button class="btn" onclick="refreshData()">Refresh</button>
+                    </div>
                 </div>
                 
                 <div class="dashboard-grid">
-                    <div class="dashboard-card">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Profile Preview</h2>
+                        </div>
                         <div class="profile-preview" id="profilePreview">
-                            <!-- Profile preview loaded via JS -->
+                            <!-- Profile preview will be loaded here -->
                         </div>
                     </div>
                     
-                    <div class="dashboard-card">
-                        <h2 style="margin-bottom: 1rem;">Audio Player</h2>
-                        <div class="audio-player" id="audioPlayer">
-                            <div class="player-controls">
-                                <button class="play-btn" id="playBtn">▶</button>
-                                <div class="track-info">
-                                    <h4 id="trackTitle">No audio uploaded</h4>
-                                    <p id="trackStatus">Upload an MP3 file</p>
-                                </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Stats</h2>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value" id="viewCount">0</div>
+                                <div class="stat-label">Profile Views</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="audioPlays">0</div>
+                                <div class="stat-label">Audio Plays</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">100%</div>
+                                <div class="stat-label">Complete</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="memberDays">1</div>
+                                <div class="stat-label">Days</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header">
+                        <h2>Audio Player</h2>
+                    </div>
+                    <div class="audio-player" id="audioPlayer">
+                        <div class="player-controls">
+                            <button class="play-btn" id="playBtn">▶</button>
+                            <div>
+                                <h4 style="margin-bottom: 5px;" id="audioTitle">No Audio</h4>
+                                <p style="color: #888; font-size: 14px;" id="audioStatus">Upload an MP3 file</p>
                             </div>
                         </div>
                     </div>
@@ -418,22 +599,18 @@
                     <h1>Edit Profile</h1>
                 </div>
                 
-                <div class="dashboard-card">
+                <div class="card">
                     <form id="profileForm" onsubmit="updateProfile(event)">
                         <div class="form-group">
-                            <label for="editUsername">Username</label>
-                            <input type="text" id="editUsername" class="form-control" required>
-                            <div style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
-                                Changing username updates your profile URL
-                            </div>
+                            <label class="form-label">Username</label>
+                            <input type="text" id="editUsername" class="form-input" required>
+                            <div class="form-help">Changing username updates your profile URL</div>
                         </div>
                         
                         <div class="form-group">
-                            <label for="editBio">Bio</label>
-                            <textarea id="editBio" class="form-control" rows="4" placeholder="Tell your story..." maxlength="200"></textarea>
-                            <div style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
-                                <span id="charCount">0</span>/200 characters
-                            </div>
+                            <label class="form-label">Bio</label>
+                            <textarea id="editBio" class="form-input" placeholder="Tell your story..." maxlength="200"></textarea>
+                            <div class="form-help"><span id="charCount">0</span>/200 characters</div>
                         </div>
                         
                         <button type="submit" class="btn">Save Changes</button>
@@ -448,22 +625,24 @@
                 </div>
                 
                 <div class="dashboard-grid">
-                    <div class="dashboard-card">
-                        <h2 style="margin-bottom: 1rem;">Profile Banner</h2>
+                    <div class="card">
+                        <h2 style="margin-bottom: 20px;">Profile Banner</h2>
                         <div class="upload-area" onclick="document.getElementById('bannerInput').click()">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">📷</div>
+                            <div class="upload-icon">📷</div>
                             <h3>Upload Banner</h3>
-                            <p style="color: #666;">Click to upload image</p>
+                            <p style="color: #888;">Click or drag image</p>
+                            <p class="form-help">Recommended: 1200×300px</p>
                             <input type="file" id="bannerInput" accept="image/*" style="display: none;" onchange="uploadFile('banner', event)">
                         </div>
                     </div>
                     
-                    <div class="dashboard-card">
-                        <h2 style="margin-bottom: 1rem;">Profile Picture</h2>
+                    <div class="card">
+                        <h2 style="margin-bottom: 20px;">Profile Picture</h2>
                         <div class="upload-area" onclick="document.getElementById('avatarInput').click()">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">👤</div>
+                            <div class="upload-icon">👤</div>
                             <h3>Upload Avatar</h3>
-                            <p style="color: #666;">Click to upload image</p>
+                            <p style="color: #888;">Click or drag image</p>
+                            <p class="form-help">Recommended: 200×200px</p>
                             <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="uploadFile('avatar', event)">
                         </div>
                     </div>
@@ -476,21 +655,22 @@
                     <h1>Audio</h1>
                 </div>
                 
-                <div class="dashboard-card">
-                    <h2 style="margin-bottom: 1rem;">Upload MP3</h2>
+                <div class="card">
+                    <h2 style="margin-bottom: 20px;">Upload MP3</h2>
                     <div class="upload-area" onclick="document.getElementById('mp3Input').click()">
-                        <div style="font-size: 3rem; margin-bottom: 1rem;">🎵</div>
+                        <div class="upload-icon">🎵</div>
                         <h3>Upload MP3 File</h3>
-                        <p style="color: #666;">Click to upload audio</p>
+                        <p style="color: #888;">Click or drag audio file</p>
+                        <p class="form-help">Maximum size: 10MB</p>
                         <input type="file" id="mp3Input" accept="audio/mp3,audio/*" style="display: none;" onchange="uploadFile('mp3', event)">
                     </div>
                     
-                    <div style="margin-top: 2rem;">
-                        <h3 style="margin-bottom: 1rem;">Current Audio</h3>
-                        <div id="audioInfo" style="color: #666;">
+                    <div style="margin-top: 30px;">
+                        <h3 style="margin-bottom: 15px;">Current Audio</h3>
+                        <div id="currentAudioInfo" style="color: #888;">
                             No audio uploaded
                         </div>
-                        <button id="removeAudio" class="btn" style="background: #dc2626; margin-top: 1rem; display: none;" onclick="removeAudio()">
+                        <button id="removeAudioBtn" class="btn" style="background: #dc2626; margin-top: 15px; display: none;" onclick="removeAudio()">
                             Remove Audio
                         </button>
                     </div>
@@ -503,16 +683,16 @@
                     <h1>Settings</h1>
                 </div>
                 
-                <div class="dashboard-card">
-                    <h2 style="margin-bottom: 1rem;">Account Settings</h2>
+                <div class="card">
+                    <h2 style="margin-bottom: 20px;">Account Settings</h2>
                     
                     <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" id="userEmail" class="form-control" readonly>
+                        <label class="form-label">Email</label>
+                        <input type="email" id="currentEmail" class="form-input" readonly>
                     </div>
                     
-                    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #333;">
-                        <h3 style="margin-bottom: 1rem; color: #666;">Danger Zone</h3>
+                    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #222;">
+                        <h3 style="margin-bottom: 15px; color: #888;">Danger Zone</h3>
                         <button class="btn" style="background: #dc2626;" onclick="deleteAccount()">
                             Delete Account
                         </button>
@@ -529,102 +709,192 @@
 
         // Check authentication on load
         document.addEventListener('DOMContentLoaded', async () => {
-            const { data: { session } } = await supabase.auth.getSession();
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const dashboardContent = document.getElementById('dashboardContent');
             
-            if (!session) {
+            try {
+                // Get current session
+                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+                
+                if (sessionError) {
+                    console.error('Session error:', sessionError);
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                if (!session) {
+                    console.log('No session found, redirecting to login');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                currentUser = session.user;
+                console.log('User authenticated:', currentUser.id);
+                
+                // Load profile data
+                await loadProfileData();
+                
+                // Show dashboard
+                loadingOverlay.style.display = 'none';
+                dashboardContent.style.display = 'grid';
+                
+            } catch (error) {
+                console.error('Initialization error:', error);
+                alert('Error loading dashboard. Please try logging in again.');
                 window.location.href = 'login.html';
-                return;
             }
-            
-            currentUser = session.user;
-            await loadDashboardData();
         });
 
-        async function loadDashboardData() {
+        async function loadProfileData() {
             try {
-                // Load profile data
-                const { data: profile, error } = await supabase
+                console.log('Loading profile data...');
+                
+                // Get user profile
+                const { data: profile, error: profileError } = await supabase
                     .from('profiles')
                     .select('*')
                     .eq('id', currentUser.id)
                     .single();
                 
-                if (error) throw error;
-                
-                currentProfile = profile;
-                
-                // Update UI
-                document.getElementById('dashboardUsername').textContent = profile.username;
-                document.getElementById('dashboardEmail').textContent = profile.email;
-                document.getElementById('userEmail').value = profile.email;
-                document.getElementById('editUsername').value = profile.username;
-                document.getElementById('editBio').value = profile.bio || '';
-                document.getElementById('charCount').textContent = (profile.bio || '').length;
-                document.getElementById('profileLink').href = `profile.html?user=${profile.username}`;
-                document.getElementById('profileLink').textContent = `socialanxiety.lol/${profile.username}`;
-                
-                // Update profile preview
-                updateProfilePreview(profile);
-                
-                // Load avatar
-                const avatarEl = document.getElementById('userAvatar');
-                if (profile.avatar_url) {
-                    avatarEl.innerHTML = `<img src="${profile.avatar_url}" alt="Avatar">`;
+                if (profileError) {
+                    console.error('Profile error:', profileError);
+                    
+                    // If profile doesn't exist, create one
+                    if (profileError.code === 'PGRST116') {
+                        console.log('Creating new profile...');
+                        const username = currentUser.email.split('@')[0];
+                        
+                        const { error: createError } = await supabase
+                            .from('profiles')
+                            .insert([
+                                {
+                                    id: currentUser.id,
+                                    username: username,
+                                    email: currentUser.email,
+                                    bio: '',
+                                    avatar_url: null,
+                                    banner_url: null,
+                                    mp3_url: null,
+                                    created_at: new Date().toISOString()
+                                }
+                            ]);
+                        
+                        if (createError) {
+                            console.error('Failed to create profile:', createError);
+                            throw createError;
+                        }
+                        
+                        // Try to get the newly created profile
+                        const { data: newProfile } = await supabase
+                            .from('profiles')
+                            .select('*')
+                            .eq('id', currentUser.id)
+                            .single();
+                        
+                        currentProfile = newProfile;
+                    } else {
+                        throw profileError;
+                    }
                 } else {
-                    avatarEl.innerHTML = `<div style="font-size: 1.5rem;">👤</div>`;
+                    currentProfile = profile;
                 }
                 
-                // Load audio info
-                if (profile.mp3_url) {
-                    document.getElementById('trackTitle').textContent = 'My Audio';
-                    document.getElementById('trackStatus').textContent = 'Ready to play';
-                    document.getElementById('audioInfo').textContent = 'Audio uploaded';
-                    document.getElementById('removeAudio').style.display = 'block';
-                }
+                console.log('Profile loaded:', currentProfile);
+                
+                // Update UI with profile data
+                updateDashboardUI();
                 
             } catch (error) {
-                console.error('Error loading dashboard:', error);
-                alert('Error loading dashboard data');
+                console.error('Error loading profile:', error);
+                throw error;
             }
         }
 
-        function updateProfilePreview(profile) {
+        function updateDashboardUI() {
+            if (!currentProfile) return;
+            
+            // Update user info
+            document.getElementById('userName').textContent = currentProfile.username;
+            document.getElementById('userEmail').textContent = currentProfile.email;
+            document.getElementById('currentEmail').value = currentProfile.email;
+            document.getElementById('editUsername').value = currentProfile.username;
+            document.getElementById('editBio').value = currentProfile.bio || '';
+            document.getElementById('charCount').textContent = (currentProfile.bio || '').length;
+            
+            // Update profile URL
+            const profileUrl = `profile.html?user=${currentProfile.username}`;
+            const urlElement = document.getElementById('profileUrl');
+            urlElement.href = profileUrl;
+            urlElement.textContent = `socialanxiety.lol/${currentProfile.username}`;
+            
+            // Update profile preview
+            updateProfilePreview();
+            
+            // Update stats
+            document.getElementById('viewCount').textContent = currentProfile.views || 0;
+            document.getElementById('audioPlays').textContent = currentProfile.audio_plays || 0;
+            
+            // Calculate member days
+            if (currentProfile.created_at) {
+                const created = new Date(currentProfile.created_at);
+                const now = new Date();
+                const diffTime = Math.abs(now - created);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                document.getElementById('memberDays').textContent = diffDays;
+            }
+            
+            // Update avatar
+            const avatarEl = document.getElementById('userAvatar');
+            if (currentProfile.avatar_url) {
+                avatarEl.innerHTML = `<img src="${currentProfile.avatar_url}" alt="Avatar">`;
+            } else {
+                avatarEl.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 24px;">👤</div>`;
+            }
+            
+            // Update audio info
+            if (currentProfile.mp3_url) {
+                document.getElementById('audioTitle').textContent = currentProfile.mp3_name || 'My Audio';
+                document.getElementById('audioStatus').textContent = 'Ready to play';
+                document.getElementById('currentAudioInfo').textContent = currentProfile.mp3_name || 'Audio uploaded';
+                document.getElementById('removeAudioBtn').style.display = 'block';
+            }
+        }
+
+        function updateProfilePreview() {
             const previewEl = document.getElementById('profilePreview');
             
             let bannerHtml = '';
-            if (profile.banner_url) {
-                bannerHtml = `<img src="${profile.banner_url}" alt="Banner" style="width:100%;height:150px;object-fit:cover;">`;
+            if (currentProfile.banner_url) {
+                bannerHtml = `<img src="${currentProfile.banner_url}" alt="Banner" style="width: 100%; height: 120px; object-fit: cover;">`;
             } else {
-                bannerHtml = `<div style="width:100%;height:150px;background:linear-gradient(45deg,#222,#333);"></div>`;
+                bannerHtml = `<div style="width: 100%; height: 120px; background: linear-gradient(45deg, #222, #333);"></div>`;
             }
             
             let avatarHtml = '';
-            if (profile.avatar_url) {
-                avatarHtml = `<img src="${profile.avatar_url}" alt="Avatar">`;
+            if (currentProfile.avatar_url) {
+                avatarHtml = `<img src="${currentProfile.avatar_url}" alt="Avatar">`;
             } else {
-                avatarHtml = `<div style="font-size:2rem;">👤</div>`;
+                avatarHtml = `<div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 24px;">👤</div>`;
             }
             
             previewEl.innerHTML = `
-                <div class="profile-preview">
-                    <div class="banner-preview">
-                        ${bannerHtml}
-                        <div class="avatar-preview">
-                            ${avatarHtml}
-                        </div>
+                <div class="profile-banner">
+                    ${bannerHtml}
+                    <div class="profile-avatar">
+                        ${avatarHtml}
                     </div>
-                    <div class="profile-info">
-                        <h3 class="username-display">${profile.username}</h3>
-                        <p class="bio-display">${profile.bio || 'No bio yet'}</p>
-                    </div>
+                </div>
+                <div class="profile-details">
+                    <h3>${currentProfile.username}</h3>
+                    <p>${currentProfile.bio || 'No bio yet'}</p>
                 </div>
             `;
         }
 
         function showTab(tabId) {
-            // Update active nav
-            document.querySelectorAll('.sidebar-nav a').forEach(link => {
-                link.classList.remove('active');
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
             });
             event.target.classList.add('active');
             
@@ -639,11 +909,13 @@
 
         async function updateProfile(e) {
             e.preventDefault();
+            
             const username = document.getElementById('editUsername').value.trim().toLowerCase();
             const bio = document.getElementById('editBio').value;
             
+            // Validate username
             if (!/^[a-z0-9_]{3,20}$/.test(username)) {
-                alert('Username must be 3-20 characters (lowercase letters, numbers, underscores only)');
+                alert('Username must be 3-20 characters (letters, numbers, underscores only)');
                 return;
             }
             
@@ -658,7 +930,7 @@
                         .single();
                     
                     if (existing) {
-                        alert('Username already taken');
+                        alert('Username is already taken. Please choose another.');
                         return;
                     }
                 }
@@ -675,21 +947,18 @@
                 
                 if (error) throw error;
                 
-                // Update local state
+                // Update local profile
                 currentProfile.username = username;
                 currentProfile.bio = bio;
                 
                 // Update UI
-                document.getElementById('dashboardUsername').textContent = username;
-                document.getElementById('profileLink').href = `profile.html?user=${username}`;
-                document.getElementById('profileLink').textContent = `socialanxiety.lol/${username}`;
-                updateProfilePreview(currentProfile);
+                updateDashboardUI();
                 
                 alert('Profile updated successfully!');
                 
             } catch (error) {
                 console.error('Error updating profile:', error);
-                alert('Error updating profile');
+                alert('Error updating profile: ' + error.message);
             }
         }
 
@@ -707,19 +976,22 @@
                 // Create unique file path
                 const fileExt = file.name.split('.').pop();
                 const fileName = `${currentUser.id}/${type}_${Date.now()}.${fileExt}`;
-                const filePath = `${fileName}`;
+                
+                console.log('Uploading file:', fileName);
                 
                 // Upload to Supabase Storage
                 const { data, error } = await supabase.storage
                     .from('profiles')
-                    .upload(filePath, file);
+                    .upload(fileName, file);
                 
                 if (error) throw error;
                 
                 // Get public URL
                 const { data: { publicUrl } } = supabase.storage
                     .from('profiles')
-                    .getPublicUrl(filePath);
+                    .getPublicUrl(fileName);
+                
+                console.log('File uploaded, public URL:', publicUrl);
                 
                 // Update profile with file URL
                 const updateData = {};
@@ -739,9 +1011,11 @@
                 
                 if (updateError) throw updateError;
                 
-                // Update local state and UI
+                // Update local profile
                 Object.assign(currentProfile, updateData);
-                await loadDashboardData();
+                
+                // Update UI
+                updateDashboardUI();
                 
                 alert(`${type.charAt(0).toUpperCase() + type.slice(1)} uploaded successfully!`);
                 
@@ -765,13 +1039,17 @@
                 
                 if (error) throw error;
                 
+                // Update local profile
                 currentProfile.mp3_url = null;
                 currentProfile.mp3_name = null;
-                await loadDashboardData();
+                
+                // Update UI
+                updateDashboardUI();
                 
                 alert('Audio removed successfully!');
                 
             } catch (error) {
+                console.error('Error removing audio:', error);
                 alert('Error removing audio: ' + error.message);
             }
         }
@@ -782,10 +1060,28 @@
             }
         }
 
-        async function handleLogout() {
-            await supabase.auth.signOut();
-            localStorage.removeItem('user');
-            window.location.href = 'index.html';
+        async function logout() {
+            try {
+                await supabase.auth.signOut();
+                localStorage.removeItem('user');
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = 'index.html';
+            }
+        }
+
+        async function refreshData() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const dashboardContent = document.getElementById('dashboardContent');
+            
+            loadingOverlay.style.display = 'flex';
+            dashboardContent.style.display = 'none';
+            
+            await loadProfileData();
+            
+            loadingOverlay.style.display = 'none';
+            dashboardContent.style.display = 'grid';
         }
 
         async function deleteAccount() {
@@ -795,17 +1091,27 @@
             
             try {
                 // Delete user from auth
-                const { error: authError } = await supabase.auth.admin.deleteUser(currentUser.id);
-                if (authError) throw authError;
+                const { error: deleteError } = await supabase.auth.admin.deleteUser(currentUser.id);
                 
-                // Delete from database will cascade
-                await handleLogout();
+                if (deleteError) {
+                    console.error('Delete error:', deleteError);
+                    alert('Error deleting account. Please contact support.');
+                    return;
+                }
+                
+                // Sign out and redirect
+                await logout();
                 
             } catch (error) {
-                console.error('Error deleting account:', error);
-                alert('Error deleting account');
+                console.error('Delete error:', error);
+                alert('Error deleting account.');
             }
         }
+
+        // Character counter for bio
+        document.getElementById('editBio').addEventListener('input', function(e) {
+            document.getElementById('charCount').textContent = e.target.value.length;
+        });
     </script>
 </body>
 </html>
