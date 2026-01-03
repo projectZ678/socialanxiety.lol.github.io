@@ -337,4 +337,475 @@
             }
             
             .content-header {
-               
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">
+                        <!-- Avatar loaded via JS -->
+                    </div>
+                    <div class="user-details">
+                        <h3 id="dashboardUsername">Loading...</h3>
+                        <p id="dashboardEmail">...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a onclick="showTab('overview')" class="active">📊 Overview</a></li>
+                <li><a onclick="showTab('profile')">👤 Edit Profile</a></li>
+                <li><a onclick="showTab('appearance')">🎨 Appearance</a></li>
+                <li><a onclick="showTab('audio')">🎵 Audio</a></li>
+                <li><a onclick="showTab('settings')">⚙️ Settings</a></li>
+                <li><a onclick="handleLogout()">🚪 Logout</a></li>
+            </ul>
+            
+            <div class="profile-link-card">
+                <div style="font-size: 12px; color: #666; margin-bottom: 8px;">Your Profile URL:</div>
+                <div class="profile-url">
+                    <a href="" id="profileLink" target="_blank" style="color: white; text-decoration: none;">socialanxiety.lol/...</a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Tab -->
+            <div id="overviewTab" class="dashboard-tab">
+                <div class="content-header">
+                    <h1>Dashboard</h1>
+                    <button class="btn" onclick="viewProfile()">View Public Profile</button>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="profile-preview" id="profilePreview">
+                            <!-- Profile preview loaded via JS -->
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <h2 style="margin-bottom: 1rem;">Audio Player</h2>
+                        <div class="audio-player" id="audioPlayer">
+                            <div class="player-controls">
+                                <button class="play-btn" id="playBtn">▶</button>
+                                <div class="track-info">
+                                    <h4 id="trackTitle">No audio uploaded</h4>
+                                    <p id="trackStatus">Upload an MP3 file</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profileTab" class="dashboard-tab" style="display: none;">
+                <div class="content-header">
+                    <h1>Edit Profile</h1>
+                </div>
+                
+                <div class="dashboard-card">
+                    <form id="profileForm" onsubmit="updateProfile(event)">
+                        <div class="form-group">
+                            <label for="editUsername">Username</label>
+                            <input type="text" id="editUsername" class="form-control" required>
+                            <div style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                                Changing username updates your profile URL
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editBio">Bio</label>
+                            <textarea id="editBio" class="form-control" rows="4" placeholder="Tell your story..." maxlength="200"></textarea>
+                            <div style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                                <span id="charCount">0</span>/200 characters
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Appearance Tab -->
+            <div id="appearanceTab" class="dashboard-tab" style="display: none;">
+                <div class="content-header">
+                    <h1>Appearance</h1>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h2 style="margin-bottom: 1rem;">Profile Banner</h2>
+                        <div class="upload-area" onclick="document.getElementById('bannerInput').click()">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📷</div>
+                            <h3>Upload Banner</h3>
+                            <p style="color: #666;">Click to upload image</p>
+                            <input type="file" id="bannerInput" accept="image/*" style="display: none;" onchange="uploadFile('banner', event)">
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <h2 style="margin-bottom: 1rem;">Profile Picture</h2>
+                        <div class="upload-area" onclick="document.getElementById('avatarInput').click()">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">👤</div>
+                            <h3>Upload Avatar</h3>
+                            <p style="color: #666;">Click to upload image</p>
+                            <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="uploadFile('avatar', event)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audio Tab -->
+            <div id="audioTab" class="dashboard-tab" style="display: none;">
+                <div class="content-header">
+                    <h1>Audio</h1>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h2 style="margin-bottom: 1rem;">Upload MP3</h2>
+                    <div class="upload-area" onclick="document.getElementById('mp3Input').click()">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🎵</div>
+                        <h3>Upload MP3 File</h3>
+                        <p style="color: #666;">Click to upload audio</p>
+                        <input type="file" id="mp3Input" accept="audio/mp3,audio/*" style="display: none;" onchange="uploadFile('mp3', event)">
+                    </div>
+                    
+                    <div style="margin-top: 2rem;">
+                        <h3 style="margin-bottom: 1rem;">Current Audio</h3>
+                        <div id="audioInfo" style="color: #666;">
+                            No audio uploaded
+                        </div>
+                        <button id="removeAudio" class="btn" style="background: #dc2626; margin-top: 1rem; display: none;" onclick="removeAudio()">
+                            Remove Audio
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settingsTab" class="dashboard-tab" style="display: none;">
+                <div class="content-header">
+                    <h1>Settings</h1>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h2 style="margin-bottom: 1rem;">Account Settings</h2>
+                    
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="userEmail" class="form-control" readonly>
+                    </div>
+                    
+                    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #333;">
+                        <h3 style="margin-bottom: 1rem; color: #666;">Danger Zone</h3>
+                        <button class="btn" style="background: #dc2626;" onclick="deleteAccount()">
+                            Delete Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const supabase = window.supabase;
+        let currentUser = null;
+        let currentProfile = null;
+
+        // Check authentication on load
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            currentUser = session.user;
+            await loadDashboardData();
+        });
+
+        async function loadDashboardData() {
+            try {
+                // Load profile data
+                const { data: profile, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+                
+                if (error) throw error;
+                
+                currentProfile = profile;
+                
+                // Update UI
+                document.getElementById('dashboardUsername').textContent = profile.username;
+                document.getElementById('dashboardEmail').textContent = profile.email;
+                document.getElementById('userEmail').value = profile.email;
+                document.getElementById('editUsername').value = profile.username;
+                document.getElementById('editBio').value = profile.bio || '';
+                document.getElementById('charCount').textContent = (profile.bio || '').length;
+                document.getElementById('profileLink').href = `profile.html?user=${profile.username}`;
+                document.getElementById('profileLink').textContent = `socialanxiety.lol/${profile.username}`;
+                
+                // Update profile preview
+                updateProfilePreview(profile);
+                
+                // Load avatar
+                const avatarEl = document.getElementById('userAvatar');
+                if (profile.avatar_url) {
+                    avatarEl.innerHTML = `<img src="${profile.avatar_url}" alt="Avatar">`;
+                } else {
+                    avatarEl.innerHTML = `<div style="font-size: 1.5rem;">👤</div>`;
+                }
+                
+                // Load audio info
+                if (profile.mp3_url) {
+                    document.getElementById('trackTitle').textContent = 'My Audio';
+                    document.getElementById('trackStatus').textContent = 'Ready to play';
+                    document.getElementById('audioInfo').textContent = 'Audio uploaded';
+                    document.getElementById('removeAudio').style.display = 'block';
+                }
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                alert('Error loading dashboard data');
+            }
+        }
+
+        function updateProfilePreview(profile) {
+            const previewEl = document.getElementById('profilePreview');
+            
+            let bannerHtml = '';
+            if (profile.banner_url) {
+                bannerHtml = `<img src="${profile.banner_url}" alt="Banner" style="width:100%;height:150px;object-fit:cover;">`;
+            } else {
+                bannerHtml = `<div style="width:100%;height:150px;background:linear-gradient(45deg,#222,#333);"></div>`;
+            }
+            
+            let avatarHtml = '';
+            if (profile.avatar_url) {
+                avatarHtml = `<img src="${profile.avatar_url}" alt="Avatar">`;
+            } else {
+                avatarHtml = `<div style="font-size:2rem;">👤</div>`;
+            }
+            
+            previewEl.innerHTML = `
+                <div class="profile-preview">
+                    <div class="banner-preview">
+                        ${bannerHtml}
+                        <div class="avatar-preview">
+                            ${avatarHtml}
+                        </div>
+                    </div>
+                    <div class="profile-info">
+                        <h3 class="username-display">${profile.username}</h3>
+                        <p class="bio-display">${profile.bio || 'No bio yet'}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showTab(tabId) {
+            // Update active nav
+            document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Hide all tabs
+            document.querySelectorAll('.dashboard-tab').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Show requested tab
+            document.getElementById(tabId + 'Tab').style.display = 'block';
+        }
+
+        async function updateProfile(e) {
+            e.preventDefault();
+            const username = document.getElementById('editUsername').value.trim().toLowerCase();
+            const bio = document.getElementById('editBio').value;
+            
+            if (!/^[a-z0-9_]{3,20}$/.test(username)) {
+                alert('Username must be 3-20 characters (lowercase letters, numbers, underscores only)');
+                return;
+            }
+            
+            try {
+                // Check if username is available (if changed)
+                if (username !== currentProfile.username) {
+                    const { data: existing } = await supabase
+                        .from('profiles')
+                        .select('username')
+                        .eq('username', username)
+                        .neq('id', currentUser.id)
+                        .single();
+                    
+                    if (existing) {
+                        alert('Username already taken');
+                        return;
+                    }
+                }
+                
+                // Update profile
+                const { error } = await supabase
+                    .from('profiles')
+                    .update({
+                        username: username,
+                        bio: bio,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', currentUser.id);
+                
+                if (error) throw error;
+                
+                // Update local state
+                currentProfile.username = username;
+                currentProfile.bio = bio;
+                
+                // Update UI
+                document.getElementById('dashboardUsername').textContent = username;
+                document.getElementById('profileLink').href = `profile.html?user=${username}`;
+                document.getElementById('profileLink').textContent = `socialanxiety.lol/${username}`;
+                updateProfilePreview(currentProfile);
+                
+                alert('Profile updated successfully!');
+                
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Error updating profile');
+            }
+        }
+
+        async function uploadFile(type, event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Validate file size (10MB max)
+            if (file.size > 10 * 1024 * 1024) {
+                alert('File too large. Maximum size is 10MB.');
+                return;
+            }
+            
+            try {
+                // Create unique file path
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${currentUser.id}/${type}_${Date.now()}.${fileExt}`;
+                const filePath = `${fileName}`;
+                
+                // Upload to Supabase Storage
+                const { data, error } = await supabase.storage
+                    .from('profiles')
+                    .upload(filePath, file);
+                
+                if (error) throw error;
+                
+                // Get public URL
+                const { data: { publicUrl } } = supabase.storage
+                    .from('profiles')
+                    .getPublicUrl(filePath);
+                
+                // Update profile with file URL
+                const updateData = {};
+                if (type === 'avatar') {
+                    updateData.avatar_url = publicUrl;
+                } else if (type === 'banner') {
+                    updateData.banner_url = publicUrl;
+                } else if (type === 'mp3') {
+                    updateData.mp3_url = publicUrl;
+                    updateData.mp3_name = file.name;
+                }
+                
+                const { error: updateError } = await supabase
+                    .from('profiles')
+                    .update(updateData)
+                    .eq('id', currentUser.id);
+                
+                if (updateError) throw updateError;
+                
+                // Update local state and UI
+                Object.assign(currentProfile, updateData);
+                await loadDashboardData();
+                
+                alert(`${type.charAt(0).toUpperCase() + type.slice(1)} uploaded successfully!`);
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                alert('Error uploading file: ' + error.message);
+            }
+        }
+
+        async function removeAudio() {
+            if (!confirm('Remove audio from your profile?')) return;
+            
+            try {
+                const { error } = await supabase
+                    .from('profiles')
+                    .update({
+                        mp3_url: null,
+                        mp3_name: null
+                    })
+                    .eq('id', currentUser.id);
+                
+                if (error) throw error;
+                
+                currentProfile.mp3_url = null;
+                currentProfile.mp3_name = null;
+                await loadDashboardData();
+                
+                alert('Audio removed successfully!');
+                
+            } catch (error) {
+                alert('Error removing audio: ' + error.message);
+            }
+        }
+
+        function viewProfile() {
+            if (currentProfile) {
+                window.open(`profile.html?user=${currentProfile.username}`, '_blank');
+            }
+        }
+
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+
+        async function deleteAccount() {
+            if (!confirm('Are you sure? This will permanently delete your account and all data.')) {
+                return;
+            }
+            
+            try {
+                // Delete user from auth
+                const { error: authError } = await supabase.auth.admin.deleteUser(currentUser.id);
+                if (authError) throw authError;
+                
+                // Delete from database will cascade
+                await handleLogout();
+                
+            } catch (error) {
+                console.error('Error deleting account:', error);
+                alert('Error deleting account');
+            }
+        }
+    </script>
+</body>
+</html>
