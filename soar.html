@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cybersecurity Profile</title>
+    <title>Cyber Threat Hunter</title>
     <link href="https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@100..800&display=swap" rel="stylesheet">
     <style>
         * {
@@ -36,22 +36,33 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            opacity: 0.35;
-            filter: brightness(0.7) sepia(0.3) hue-rotate(-10deg);
+            opacity: 0.3;
+            filter: brightness(0.6) sepia(0.4) hue-rotate(-10deg);
             z-index: -2;
         }
 
-        /* Blood stain overlay */
-        .blood-overlay {
+        /* Dark overlay for better contrast */
+        .dark-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(circle at 15% 25%, rgba(100, 0, 0, 0.25) 0%, transparent 40%),
-                radial-gradient(circle at 85% 75%, rgba(80, 0, 0, 0.2) 0%, transparent 35%),
-                radial-gradient(circle at 50% 50%, rgba(60, 0, 0, 0.15) 0%, transparent 30%);
+            background: rgba(5, 0, 0, 0.7);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Blood pattern overlay */
+        .blood-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(150, 0, 0, 0.15) 0%, transparent 25%),
+                radial-gradient(circle at 80% 70%, rgba(120, 0, 0, 0.1) 0%, transparent 20%);
             z-index: -1;
             pointer-events: none;
         }
@@ -59,17 +70,16 @@
         /* Main container */
         .container {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1100px;
             display: flex;
-            background: rgba(15, 5, 5, 0.88);
-            border-radius: 12px;
-            border: 1px solid rgba(100, 0, 0, 0.6);
+            background: rgba(10, 2, 2, 0.92);
+            border-radius: 8px;
+            border: 1px solid rgba(120, 0, 0, 0.7);
             box-shadow: 
-                0 10px 40px rgba(0, 0, 0, 0.9),
-                0 0 0 1px rgba(50, 0, 0, 0.8);
+                0 10px 30px rgba(0, 0, 0, 0.9),
+                0 0 0 1px rgba(80, 0, 0, 0.8);
             overflow: hidden;
             position: relative;
-            padding: 0;
         }
 
         /* Left profile section */
@@ -79,61 +89,55 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            border-right: 1px solid rgba(100, 0, 0, 0.5);
-            background: rgba(10, 2, 2, 0.7);
+            border-right: 1px solid rgba(100, 0, 0, 0.6);
+            background: rgba(15, 3, 3, 0.85);
             min-width: 380px;
         }
 
         /* Profile picture */
         .pfp-container {
             position: relative;
-            width: 180px;
-            height: 180px;
-            border-radius: 8px;
+            width: 190px;
+            height: 190px;
+            border-radius: 6px;
             overflow: hidden;
             margin-bottom: 30px;
-            border: 2px solid rgba(150, 0, 0, 0.7);
+            border: 2px solid rgba(180, 0, 0, 0.8);
             box-shadow: 
-                0 5px 20px rgba(0, 0, 0, 0.7),
+                0 5px 15px rgba(0, 0, 0, 0.8),
                 inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .pfp-container:hover {
             transform: translateY(-3px);
-            border-color: rgba(200, 0, 0, 0.9);
+            border-color: rgba(220, 0, 0, 0.9);
+            box-shadow: 
+                0 8px 20px rgba(150, 0, 0, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
         }
 
         .pfp-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: contrast(1.1) brightness(0.9) sepia(0.2);
+            filter: contrast(1.1) brightness(0.85) sepia(0.3);
         }
 
-        /* Blood drip effect on pfp */
-        .pfp-drip {
+        /* Blood trail effect */
+        .blood-trail {
             position: absolute;
-            bottom: 0;
-            left: 30%;
-            width: 20px;
-            height: 30px;
-            background: linear-gradient(to bottom, rgba(180, 0, 0, 0.8), transparent);
-            border-radius: 0 0 10px 10px;
-            clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
-            animation: dripFall 4s infinite;
-        }
-
-        @keyframes dripFall {
-            0%, 100% { height: 0; opacity: 0; }
-            30% { height: 30px; opacity: 0.8; }
-            70% { height: 30px; opacity: 0.8; }
-            90% { height: 0; opacity: 0; }
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 10px;
+            background: radial-gradient(ellipse at center, rgba(180, 0, 0, 0.6) 0%, transparent 70%);
         }
 
         /* Name styling */
         .name-container {
-            margin-top: 10px;
+            margin-top: 15px;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
@@ -143,17 +147,18 @@
 
         .name-letter {
             font-family: 'Playpen Sans', cursive;
-            font-size: 3.2rem;
-            font-weight: 700;
-            color: #b00;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #c00;
             text-transform: uppercase;
             opacity: 0;
             transform: translateY(20px);
             text-shadow: 
-                1px 1px 2px rgba(0, 0, 0, 0.8),
-                0 0 5px rgba(150, 0, 0, 0.5);
+                2px 2px 4px rgba(0, 0, 0, 0.9),
+                0 0 8px rgba(150, 0, 0, 0.6);
             animation: letterDrop 0.5s forwards;
             position: relative;
+            letter-spacing: -1px;
         }
 
         @keyframes letterDrop {
@@ -163,11 +168,24 @@
             }
         }
 
-        /* Simple letter animation */
+        /* Name letter animation delays */
         .name-letter:nth-child(1) { animation-delay: 0.1s; }
         .name-letter:nth-child(2) { animation-delay: 0.2s; }
         .name-letter:nth-child(3) { animation-delay: 0.3s; }
         .name-letter:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Profile tagline */
+        .profile-tagline {
+            font-size: 1.1rem;
+            color: #b44;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 10px 15px;
+            background: rgba(30, 5, 5, 0.7);
+            border-radius: 4px;
+            border-left: 3px solid #b00;
+            max-width: 300px;
+        }
 
         /* Right content section */
         .content-section {
@@ -175,44 +193,68 @@
             padding: 40px 35px;
             display: flex;
             flex-direction: column;
-            background: rgba(20, 5, 5, 0.8);
+            background: rgba(18, 4, 4, 0.9);
         }
 
         .section-title {
             font-family: 'Playpen Sans', cursive;
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             font-weight: 700;
-            color: #c44;
+            color: #d44;
             margin-bottom: 25px;
             padding-bottom: 10px;
-            border-bottom: 1px solid rgba(100, 0, 0, 0.5);
+            border-bottom: 1px solid rgba(120, 0, 0, 0.6);
             letter-spacing: 0.5px;
+        }
+
+        /* Mission statement */
+        .mission-statement {
+            background: rgba(25, 5, 5, 0.9);
+            border-radius: 6px;
+            padding: 22px;
+            margin-bottom: 30px;
+            border-left: 4px solid #b00;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        .mission-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #d00;
+            margin-bottom: 12px;
+        }
+
+        .mission-text {
+            font-size: 1rem;
+            color: #c99;
+            line-height: 1.6;
         }
 
         /* Cybersecurity terms */
         .cyber-terms {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
             margin-bottom: 30px;
         }
 
         .term-card {
-            background: rgba(25, 5, 5, 0.9);
-            border-radius: 8px;
-            padding: 20px;
-            border-left: 4px solid #b00;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            background: rgba(28, 6, 6, 0.95);
+            border-radius: 6px;
+            padding: 22px;
+            border-left: 4px solid #a00;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            transition: all 0.25s ease;
         }
 
         .term-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-4px);
             border-color: #f00;
+            box-shadow: 0 6px 15px rgba(150, 0, 0, 0.2);
         }
 
         .term-acronym {
-            font-size: 1.8rem;
+            font-size: 1.9rem;
             font-weight: 800;
             color: #d00;
             margin-bottom: 8px;
@@ -220,77 +262,101 @@
         }
 
         .term-full {
-            font-size: 1rem;
+            font-size: 1.05rem;
             color: #c99;
             margin-bottom: 10px;
             line-height: 1.4;
         }
 
         .term-desc {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: #a88;
             line-height: 1.5;
         }
 
-        /* Additional info section */
-        .info-box {
-            background: rgba(30, 8, 8, 0.9);
-            border-radius: 8px;
-            padding: 20px;
-            border-top: 1px solid rgba(100, 0, 0, 0.5);
+        /* Protocols section */
+        .protocols-section {
+            margin-top: 10px;
+        }
+
+        .protocols-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
             margin-top: 15px;
         }
 
-        .info-title {
+        .protocol-item {
+            background: rgba(30, 8, 8, 0.9);
+            border-radius: 4px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid rgba(100, 0, 0, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .protocol-item:hover {
+            background: rgba(40, 10, 10, 0.95);
+            border-color: rgba(150, 0, 0, 0.6);
+        }
+
+        .protocol-name {
             font-size: 1.1rem;
-            font-weight: 600;
+            font-weight: 700;
             color: #c44;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
-        .info-text {
-            font-size: 0.95rem;
-            color: #b99;
-            line-height: 1.6;
-        }
-
-        /* Simple divider */
-        .divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(150, 0, 0, 0.5), transparent);
-            margin: 25px 0;
+        .protocol-use {
+            font-size: 0.85rem;
+            color: #a77;
         }
 
         /* Footer */
         .footer {
-            margin-top: 30px;
+            margin-top: 35px;
             padding-top: 20px;
-            border-top: 1px solid rgba(100, 0, 0, 0.4);
+            border-top: 1px solid rgba(100, 0, 0, 0.5);
             text-align: center;
             color: #944;
             font-size: 0.85rem;
         }
 
-        /* Simple blood drops in background */
-        .blood-drop {
-            position: absolute;
-            width: 4px;
-            height: 8px;
-            background-color: rgba(150, 0, 0, 0.4);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            z-index: -1;
+        /* Music player */
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(20, 0, 0, 0.8);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(150, 0, 0, 0.6);
+            color: #c44;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .music-control:hover {
+            background: rgba(30, 0, 0, 0.9);
+            color: #f44;
+            transform: scale(1.1);
         }
 
         /* Responsive design */
-        @media (max-width: 900px) {
+        @media (max-width: 1000px) {
             .container {
                 flex-direction: column;
-                max-width: 600px;
+                max-width: 700px;
             }
             
             .profile-section {
                 border-right: none;
-                border-bottom: 1px solid rgba(100, 0, 0, 0.5);
+                border-bottom: 1px solid rgba(100, 0, 0, 0.6);
                 min-width: auto;
                 padding: 30px 20px;
             }
@@ -302,35 +368,50 @@
             .cyber-terms {
                 grid-template-columns: 1fr;
             }
+            
+            .protocols-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
-        @media (max-width: 500px) {
+        @media (max-width: 600px) {
             .name-letter {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
             }
             
             .pfp-container {
-                width: 150px;
-                height: 150px;
+                width: 160px;
+                height: 160px;
             }
             
             .section-title {
-                font-size: 1.4rem;
+                font-size: 1.5rem;
+            }
+            
+            .protocols-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="blood-overlay"></div>
+    <div class="dark-overlay"></div>
+    <div class="blood-pattern"></div>
     
-    <!-- Simple blood drops -->
-    <div id="bloodDrops"></div>
+    <!-- Hidden YouTube iframe for music -->
+    <iframe id="bgMusic" style="display: none;" src="https://www.youtube.com/embed/yY8dxBvRwoQ?autoplay=1&loop=1&playlist=yY8dxBvRwoQ" allow="autoplay"></iframe>
+    
+    <div class="music-control" id="musicToggle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+        </svg>
+    </div>
     
     <div class="container">
         <div class="profile-section">
             <div class="pfp-container">
                 <img src="https://raw.githubusercontent.com/projectZ678/socialanxiety.lol.github.io/main/assets/IMG_1746.jpg" alt="Profile Picture" class="pfp-img">
-                <div class="pfp-drip"></div>
+                <div class="blood-trail"></div>
             </div>
             
             <div class="name-container">
@@ -340,86 +421,115 @@
                 <span class="name-letter">R</span>
             </div>
             
-            <div class="info-box">
-                <div class="info-title">Security Specialist</div>
-                <div class="info-text">Focus on threat detection, incident response, and defensive security architecture. Currently working with EDR/XDR implementations and security automation.</div>
+            <div class="profile-tagline">
+                Cyber Threat Hunter • OSINT Specialist
+            </div>
+            
+            <div class="mission-statement">
+                <div class="mission-title">PRIMARY MISSION</div>
+                <div class="mission-text">Identifying, tracking, and disrupting online predators through advanced digital forensics, OSINT techniques, and collaboration with law enforcement agencies worldwide. Specializing in tracing encrypted communications and unmasking anonymous threats.</div>
             </div>
         </div>
         
         <div class="content-section">
-            <h2 class="section-title">Key Security Concepts</h2>
+            <h2 class="section-title">Operational Protocols & Tools</h2>
             
             <div class="cyber-terms">
                 <div class="term-card">
-                    <div class="term-acronym">EDR</div>
-                    <div class="term-full">Endpoint Detection & Response</div>
-                    <div class="term-desc">Continuously monitors endpoint activities to detect and investigate suspicious behavior, providing visibility and response capabilities.</div>
+                    <div class="term-acronym">OSINT</div>
+                    <div class="term-full">Open Source Intelligence</div>
+                    <div class="term-desc">Gathering information from publicly available sources to identify and track subjects across platforms, social media, and online communities.</div>
                 </div>
                 
                 <div class="term-card">
-                    <div class="term-acronym">XDR</div>
-                    <div class="term-full">Extended Detection & Response</div>
-                    <div class="term-desc">Integrates multiple security products into a cohesive system that provides comprehensive threat detection and response across endpoints, networks, and cloud.</div>
+                    <div class="term-acronym">EDR/XDR</div>
+                    <div class="term-full">Endpoint/Extended Detection & Response</div>
+                    <div class="term-desc">Monitoring systems for malicious activity, particularly useful in tracking malware distribution and communication channels used by threats.</div>
                 </div>
                 
                 <div class="term-card">
-                    <div class="term-acronym">SIEM</div>
-                    <div class="term-full">Security Information & Event Management</div>
-                    <div class="term-desc">Aggregates and analyzes log data from various sources to identify security incidents and provide real-time monitoring.</div>
+                    <div class="term-acronym">DFIR</div>
+                    <div class="term-full">Digital Forensics & Incident Response</div>
+                    <div class="term-desc">Preserving and analyzing digital evidence from devices, networks, and cloud services for investigative purposes and legal proceedings.</div>
                 </div>
                 
                 <div class="term-card">
-                    <div class="term-acronym">SOAR</div>
-                    <div class="term-full">Security Orchestration, Automation & Response</div>
-                    <div class="term-desc">Combines orchestration, automation, and response capabilities to streamline security operations and incident response workflows.</div>
+                    <div class="term-acronym">TOR/I2P</div>
+                    <div class="term-full">Darknet Analysis</div>
+                    <div class="term-desc">Monitoring and investigating activities within anonymized networks where significant predatory behavior occurs.</div>
                 </div>
             </div>
             
-            <div class="divider"></div>
-            
-            <div class="info-box">
-                <div class="info-title">Current Focus</div>
-                <div class="info-text">Building automated threat detection pipelines, improving incident response times through orchestration, and implementing Zero Trust principles across hybrid environments. Specializing in integrating disparate security tools into cohesive defense systems.</div>
+            <div class="protocols-section">
+                <h2 class="section-title">Key Protocols & Standards</h2>
+                
+                <div class="protocols-grid">
+                    <div class="protocol-item">
+                        <div class="protocol-name">HTTPS/SSL</div>
+                        <div class="protocol-use">Encrypted web traffic analysis</div>
+                    </div>
+                    
+                    <div class="protocol-item">
+                        <div class="protocol-name">IRC/XMPP</div>
+                        <div class="protocol-use">Chat protocol monitoring</div>
+                    </div>
+                    
+                    <div class="protocol-item">
+                        <div class="protocol-name">VPN Protocols</div>
+                        <div class="protocol-use">Tunneling identification</div>
+                    </div>
+                    
+                    <div class="protocol-item">
+                        <div class="protocol-name">DNS/DNSSEC</div>
+                        <div class="protocol-use">Domain tracking & validation</div>
+                    </div>
+                    
+                    <div class="protocol-item">
+                        <div class="protocol-name">P2P Networks</div>
+                        <div class="protocol-use">File sharing monitoring</div>
+                    </div>
+                    
+                    <div class="protocol-item">
+                        <div class="protocol-name">Encryption</div>
+                        <div class="protocol-use">Analysis & decryption methods</div>
+                    </div>
+                </div>
             </div>
             
             <div class="footer">
-                Security operations • Threat intelligence • Incident response
+                Operation Active • 24/7 Monitoring • Law Enforcement Collaboration
             </div>
         </div>
     </div>
 
     <script>
-        // Simple script to add a few blood drops in the background
         document.addEventListener('DOMContentLoaded', function() {
-            const dropsContainer = document.getElementById('bloodDrops');
-            const dropCount = 12;
+            // Music control
+            const musicToggle = document.getElementById('musicToggle');
+            const bgMusic = document.getElementById('bgMusic');
+            let musicPlaying = true;
             
-            for (let i = 0; i < dropCount; i++) {
-                const drop = document.createElement('div');
-                drop.classList.add('blood-drop');
-                
-                // Random position
-                drop.style.left = `${Math.random() * 100}%`;
-                drop.style.top = `${Math.random() * 100}%`;
-                
-                // Random size
-                const size = Math.random() * 5 + 3;
-                drop.style.width = `${size}px`;
-                drop.style.height = `${size * 1.5}px`;
-                
-                // Random opacity
-                drop.style.opacity = `${Math.random() * 0.4 + 0.1}`;
-                
-                dropsContainer.appendChild(drop);
-            }
+            musicToggle.addEventListener('click', function() {
+                if (musicPlaying) {
+                    // Pause music by reloading iframe with autoplay disabled
+                    bgMusic.src = bgMusic.src.replace('autoplay=1', 'autoplay=0');
+                    musicPlaying = false;
+                    musicToggle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>';
+                } else {
+                    // Play music by reloading iframe with autoplay enabled
+                    bgMusic.src = 'https://www.youtube.com/embed/yY8dxBvRwoQ?autoplay=1&loop=1&playlist=yY8dxBvRwoQ';
+                    musicPlaying = true;
+                    musicToggle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
+                }
+            });
             
-            // Simple hover effect for term cards
+            // Term card hover effects
             const termCards = document.querySelectorAll('.term-card');
             termCards.forEach(card => {
                 card.addEventListener('mouseenter', function() {
                     const acronym = this.querySelector('.term-acronym');
                     acronym.style.color = '#f22';
-                    acronym.style.textShadow = '0 0 8px rgba(255, 0, 0, 0.5)';
+                    acronym.style.textShadow = '0 0 10px rgba(255, 0, 0, 0.7)';
                 });
                 
                 card.addEventListener('mouseleave', function() {
@@ -429,17 +539,41 @@
                 });
             });
             
-            // Simple interaction for name letters
+            // Name letter interaction
             const nameLetters = document.querySelectorAll('.name-letter');
             nameLetters.forEach(letter => {
                 letter.addEventListener('mouseenter', function() {
                     this.style.color = '#f00';
+                    this.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.9), 0 0 15px rgba(255, 0, 0, 0.8)';
                 });
                 
                 letter.addEventListener('mouseleave', function() {
                     this.style.color = '';
+                    this.style.textShadow = '';
                 });
             });
+            
+            // Protocol item hover
+            const protocolItems = document.querySelectorAll('.protocol-item');
+            protocolItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    const name = this.querySelector('.protocol-name');
+                    name.style.color = '#f44';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    const name = this.querySelector('.protocol-name');
+                    name.style.color = '';
+                });
+            });
+            
+            // Auto-play music notification
+            setTimeout(() => {
+                musicToggle.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    musicToggle.style.transform = 'scale(1)';
+                }, 300);
+            }, 1000);
         });
     </script>
 </body>
