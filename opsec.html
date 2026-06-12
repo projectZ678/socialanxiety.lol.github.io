@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@opsec</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>@opsec | cyber archive</title>
     
     <!-- Open Graph Meta Tags for Discord Embeds -->
-    <meta property="og:title" content="@opsec">
-    <meta property="og:description" content="untested opsec">
+    <meta property="og:title" content="@opsec | digital presence">
+    <meta property="og:description" content="cybersecurity • full-stack • immersive identity">
     <meta property="og:image" content="https://i.pinimg.com/736x/2f/da/ef/2fdaef26eb8fdbf0d0dee3003a354fc0.jpg">
-    <meta property="og:url" content="https://yourdomain.com">
+    <meta property="og:url" content="https://opsec.zone">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="@opsec">
+    <meta property="og:site_name" content="opsec archive">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="@opsec">
-    <meta name="twitter:description" content="untested opsec">
+    <meta name="twitter:description" content="untested opsec | digital fortress">
     <meta name="twitter:image" content="https://i.pinimg.com/736x/2f/da/ef/2fdaef26eb8fdbf0d0dee3003a354fc0.jpg">
     
     <style>
@@ -22,855 +22,701 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Courier New', monospace;
+            user-select: none;
         }
 
         body {
-            background-color: #000;
+            background: #000;
             color: #fff;
-            overflow: hidden;
             min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Inter', 'Segoe UI', 'Courier New', monospace;
+            transition: background 0.4s ease;
         }
 
-        /* Custom Cursor */
+        /* custom cursor */
         .custom-cursor {
             position: fixed;
-            width: 32px;
-            height: 32px;
-            background: url('assets/custom_cursor.png') no-repeat center center;
-            background-size: contain;
+            width: 28px;
+            height: 28px;
+            background: radial-gradient(circle, rgba(255,255,255,0.9), rgba(0,255,255,0.4));
+            border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+            box-shadow: 0 0 12px cyan;
+            backdrop-filter: blur(2px);
         }
 
         body:not(.touch-device) {
             cursor: none;
         }
 
-        /* Container & Background */
-        .container {
-            width: 100%;
-            height: 100vh;
-            position: relative;
-        }
-
-        #background {
+        /* background video layer */
+        #bg-video {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            z-index: 1;
-            pointer-events: none;
-            filter: brightness(0.7);
+            z-index: 0;
+            filter: brightness(0.55) saturate(1.2);
+            transition: filter 0.5s ease;
         }
 
-        /* Overlays */
-        .glitch-overlay,
-        #hacker-overlay,
-        #snow-overlay {
+        /* dynamic overlays */
+        .fx-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 2;
+            z-index: 1;
         }
 
-        #hacker-overlay,
-        #snow-overlay {
-            z-index: 3;
+        #glitchCanvas, #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* main glass panel */
+        .glass-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(92%, 760px);
+            z-index: 15;
+            background: rgba(8, 8, 12, 0.75);
+            backdrop-filter: blur(18px);
+            border-radius: 2rem;
+            border: 1px solid rgba(0, 255, 255, 0.25);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,255,255,0.1) inset;
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            opacity: 0;
+            transform: translate(-50%, -45%);
+        }
+
+        .glass-panel.visible {
+            opacity: 1;
+            transform: translate(-50%, -50%);
+        }
+
+        .profile-inner {
+            padding: 2rem 2rem 1.8rem;
+        }
+
+        .profile-flex {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            flex-shrink: 0;
+        }
+
+        .avatar-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid rgba(0,255,255,0.7);
+            box-shadow: 0 0 28px rgba(0,255,255,0.3);
+            transition: 0.3s;
+        }
+
+        .avatar-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, cyan, magenta, cyan);
+            opacity: 0.5;
+            z-index: -1;
+            animation: spinGlow 6s linear infinite;
+        }
+
+        @keyframes spinGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(0,255,255,0.15);
+            backdrop-filter: blur(8px);
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid rgba(0,255,255,0.4);
+            margin: 0.8rem 0 0.6rem;
+        }
+
+        .bio-text {
+            color: #ddd;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            max-width: 380px;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,255,255,0.4), transparent);
+            margin: 1.6rem 0;
+        }
+
+        .social-row {
+            display: flex;
+            justify-content: center;
+            gap: 2.2rem;
+            margin: 1.2rem 0;
+        }
+
+        .social-icon-link {
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-svg {
+            width: 36px;
+            height: 36px;
+            filter: drop-shadow(0 0 4px currentColor);
+            transition: transform 0.2s, filter 0.2s;
+        }
+
+        .social-icon-link:hover .social-svg {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 12px currentColor);
+        }
+
+        .visitor-card {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .counter {
+            background: rgba(0,0,0,0.5);
+            padding: 0.45rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            border: 0.5px solid rgba(255,255,255,0.2);
+        }
+
+        /* skills section */
+        .skills-panel {
+            margin-top: 1.4rem;
+            background: rgba(0,0,0,0.4);
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            transition: all 0.4s;
+        }
+
+        .skills-title {
+            font-size: 1.3rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 0.6rem;
+            align-items: center;
+        }
+
+        .skill-item {
+            margin-bottom: 1.2rem;
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+        }
+
+        .progress-bg {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            border-radius: 8px;
+            transition: width 1s cubic-bezier(0.22, 0.97, 0.36, 1);
+        }
+
+        /* controls bar */
+        .control-dock {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 30;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(20px);
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            display: flex;
+            gap: 1.6rem;
+            border: 0.5px solid rgba(255,255,255,0.15);
+            font-size: 0.8rem;
+        }
+
+        .ctrl-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .theme-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .theme-dot.active, .theme-dot:hover {
+            transform: scale(1.15);
+            background: rgba(0,255,255,0.3);
+            border-color: cyan;
+            box-shadow: 0 0 8px cyan;
+        }
+
+        input[type="range"] {
+            width: 90px;
+            height: 3px;
+            -webkit-appearance: none;
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+        }
+
+        input[type="range"]:focus {
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: cyan;
+            cursor: pointer;
+            box-shadow: 0 0 6px cyan;
+        }
+
+        #skillsToggle {
+            background: rgba(0,0,0,0.7);
+            border: 1px solid cyan;
+            color: cyan;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+            transition: 0.2s;
+        }
+
+        #skillsToggle:hover {
+            background: cyan;
+            color: black;
+            box-shadow: 0 0 12px cyan;
+        }
+
+        /* start overlay */
+        #entry-screen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(2px);
+            transition: opacity 0.8s ease;
+            cursor: pointer;
+        }
+
+        .entry-card {
+            text-align: center;
+            border: 1px solid rgba(0,255,255,0.4);
+            padding: 2rem 3rem;
+            border-radius: 2rem;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(12px);
+            animation: pulseGlow 1.8s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(0,255,255,0.3);}
+            100% { box-shadow: 0 0 0 18px rgba(0,255,255,0);}
         }
 
         .hidden {
             display: none !important;
         }
 
-        /* Main Content Container */
-        .main-content {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: min(90%, 700px);
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        /* Profile Card */
-        #profile-block {
-            background: rgba(0, 0, 0, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 2.5rem;
-            border-radius: 20px;
-            width: 100%;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            transform-style: preserve-3d;
-            transition: transform 0.5s ease-out, opacity 0.5s ease;
-            opacity: 0;
-        }
-
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .profile-container {
-            position: relative;
-            width: 140px;
-            height: 140px;
-            flex-shrink: 0;
-        }
-
-        .profile-container::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            right: -4px;
-            bottom: -4px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, var(--primary-color, #00CED1) 0%, transparent 70%);
-            animation: orbit 8s linear infinite;
-            z-index: -1;
-            opacity: 0.4;
-        }
-
-        .profile-picture {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease;
-        }
-
-        .profile-picture:hover {
-            transform: scale(1.05);
-        }
-
-        /* Typography */
-        @font-face {
-            font-family: 'Angel Wish';
-            src: url('assets/Angel_wish.ttf') format('truetype');
-        }
-
-        #profile-name {
-            font-family: 'Angel Wish', 'Courier New', monospace;
-            font-size: 2.8rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-            margin-bottom: 0.5rem;
-            line-height: 1.2;
-        }
-
-        .opsec-tag {
-            display: inline-block;
-            background: linear-gradient(135deg, rgba(0, 195, 255, 0.2), rgba(255, 0, 255, 0.2));
-            color: #fff;
-            padding: 0.5rem 1.5rem;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            margin-top: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .opsec-tag:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 195, 255, 0.3);
-        }
-
-        #profile-bio {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin: 1rem 0;
-            font-weight: 300;
-        }
-
-        /* Separator */
-        .bio-separator {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            margin: 2rem 0;
-        }
-
-        /* Social Links - Glowing Icons */
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .social-link {
-            position: relative;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .social-icon {
-            width: 32px;
-            height: 32px;
-            transition: all 0.3s ease;
-            filter: drop-shadow(0 0 8px currentColor);
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Discord Icon Color */
-        .social-link.discord .social-icon {
-            color: #5865F2;
-        }
-
-        /* TikTok Icon Color */
-        .social-link.tiktok .social-icon {
-            color: #000000;
-            filter: drop-shadow(0 0 8px #ff0050);
-        }
-
-        /* Glow Effect */
-        .social-link::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: currentColor;
-            opacity: 0;
-            filter: blur(12px);
-            transition: all 0.4s ease;
-            z-index: 1;
-        }
-
-        .social-link.discord::before {
-            background: #5865F2;
-        }
-
-        .social-link.tiktok::before {
-            background: #ff0050;
-        }
-
-        .social-link:hover {
-            transform: translateY(-4px) scale(1.1);
-        }
-
-        .social-link:hover::before {
-            opacity: 0.4;
-            width: 56px;
-            height: 56px;
-        }
-
-        .social-link:hover .social-icon {
-            transform: scale(1.2);
-            filter: drop-shadow(0 0 16px currentColor);
-        }
-
-        /* Footer */
-        .profile-footer {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .visitor-counter {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 0.6rem 1.2rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .visitor-counter::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .visitor-counter:hover::before {
-            left: 100%;
-        }
-
-        .visitor-counter:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .visitor-icon {
-            width: 18px;
-            height: 18px;
-            opacity: 0.9;
-        }
-
-        /* Controls Panel - Simplified */
-        .controls-panel {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            z-index: 20;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 0.8rem 1.5rem;
-            border-radius: 30px;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            min-width: 300px;
-            justify-content: center;
-        }
-
-        .theme-selector {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .theme-button {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .theme-button:hover,
-        .theme-button.active {
-            transform: scale(1.15);
-            border-color: rgba(255, 255, 255, 0.8);
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-        }
-
-        .control-group {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .control-icon {
-            width: 20px;
-            height: 20px;
-            color: white;
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
-        }
-
-        .control-group:hover .control-icon {
-            opacity: 1;
-        }
-
-        .slider {
-            width: 80px;
-            height: 4px;
-            -webkit-appearance: none;
-            appearance: none;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 2px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .slider:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: white;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            border: 2px solid rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease;
-        }
-
-        .slider::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
-        }
-
-        /* Results Button */
-        #results-button-container {
-            position: fixed;
-            top: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 20;
-        }
-
-        #results-theme {
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 0.8rem 1.8rem;
-            border-radius: 30px;
-            cursor: pointer;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            letter-spacing: 1.5px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        #results-theme::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.6s ease;
-        }
-
-        #results-theme:hover::before {
-            left: 100%;
-        }
-
-        #results-theme:hover {
-            background: rgba(0, 0, 0, 0.9);
-            border-color: rgba(255, 255, 255, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-        }
-
-        /* Skills Block */
-        #skills-block {
-            background: rgba(0, 0, 0, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 2.5rem;
-            border-radius: 20px;
-            width: 100%;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            transform-style: preserve-3d;
-            transition: transform 0.5s ease-out;
-        }
-
-        .skills-title {
-            font-size: 1.8rem;
-            text-align: center;
-            margin-bottom: 2rem;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 300;
-            letter-spacing: 2px;
-        }
-
-        .skill {
-            margin: 1.5rem 0;
-        }
-
-        .skill-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-        }
-
-        .skill-name {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            font-size: 1.1rem;
-        }
-
-        .skill-icon {
-            width: 24px;
-            height: 24px;
-        }
-
-        .skill-bar {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 4px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .skill-progress {
-            height: 100%;
-            border-radius: 4px;
-            width: 0%;
-            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .skill-progress::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, 
-                transparent 0%, 
-                rgba(255, 255, 255, 0.3) 50%, 
-                transparent 100%);
-            animation: shimmer 2s infinite;
-        }
-
-        /* Start Screen */
-        #start-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            cursor: pointer;
-            opacity: 1;
-            transition: opacity 0.8s ease;
-        }
-
-        #start-text {
-            font-family: 'Courier New', monospace;
-            font-size: 1.5rem;
-            color: rgba(255, 255, 255, 0.9);
-            text-align: center;
-            line-height: 1.6;
-            max-width: 600px;
-            padding: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        /* Animations */
-        @keyframes orbit {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        @keyframes glow {
-            0%, 100% { filter: drop-shadow(0 0 8px currentColor); }
-            50% { filter: drop-shadow(0 0 16px currentColor); }
-        }
-
-        /* Theme Borders */
-        .home-theme #profile-block,
-        .home-theme #skills-block {
-            border-color: rgba(0, 195, 255, 0.3);
-        }
-
-        .hacker-theme #profile-block,
-        .hacker-theme #skills-block {
-            border-color: rgba(0, 255, 0, 0.3);
-        }
-
-        .rain-theme #profile-block,
-        .rain-theme #skills-block {
-            border-color: rgba(100, 149, 237, 0.3);
-        }
-
-        .anime-theme #profile-block,
-        .anime-theme #skills-block {
-            border-color: rgba(255, 0, 255, 0.3);
-        }
-
-        .car-theme #profile-block,
-        .car-theme #skills-block {
-            border-color: rgba(255, 165, 0, 0.3);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .main-content {
-                width: 95%;
-            }
-
-            #profile-block,
-            #skills-block {
-                padding: 1.5rem;
-                border-radius: 16px;
-            }
-
-            .profile-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 1.5rem;
-            }
-
-            .profile-container {
-                width: 120px;
-                height: 120px;
-            }
-
-            #profile-name {
-                font-size: 2rem;
-            }
-
-            .controls-panel {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem;
-                min-width: 250px;
-            }
-
-            .theme-selector {
-                order: 3;
-                margin-top: 0.5rem;
-            }
-
-            .social-links {
-                gap: 1.5rem;
-            }
-
-            .social-link {
-                width: 40px;
-                height: 40px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            #profile-name {
-                font-size: 1.6rem;
-            }
-
-            #profile-bio {
-                font-size: 1rem;
-            }
-
-            .skills-title {
-                font-size: 1.4rem;
-            }
-
-            .theme-button {
-                width: 32px;
-                height: 32px;
-                font-size: 0.7rem;
-            }
-
-            .slider {
-                width: 70px;
-            }
-
-            .controls-panel {
-                width: 90%;
-                padding: 0.8rem;
-            }
+        button {
+            background: none;
+            border: none;
+            color: inherit;
+        }
+
+        @media (max-width: 650px) {
+            .profile-flex { flex-direction: column; text-align: center; gap: 1rem; }
+            .info h1 { font-size: 2rem; }
+            .control-dock { gap: 0.8rem; padding: 0.5rem 1rem; flex-wrap: wrap; width: 95%; justify-content: center; }
+            .glass-panel { width: 94%; }
         }
     </style>
 </head>
-<body class="home-theme" onload="initMedia()">
-    
+<body>
+
     <div class="custom-cursor"></div>
 
-    <!-- Start Screen -->
-    <div id="start-screen">
-        <div id="start-text">Click anywhere to enter</div>
+    <!-- entry screen -->
+    <div id="entry-screen">
+        <div class="entry-card">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⛧</div>
+            <div style="font-family: monospace;">>_ enter the grid</div>
+            <div style="font-size: 0.8rem; margin-top: 1rem;">[ click anywhere ]</div>
+        </div>
     </div>
 
-    <div class="container">
-        <!-- Background Video -->
-        <video id="background" autoplay loop muted playsinline>
-            <source src="assets/anime_red.mp4" type="video/mp4">
-        </video>
+    <!-- background video -->
+    <video id="bg-video" autoplay loop muted playsinline>
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-digital-circuit-animation-34871-large.mp4" type="video/mp4">
+    </video>
 
-        <!-- Overlays -->
-        <div class="glitch-overlay"></div>
-        <div id="hacker-overlay" class="hidden"></div>
-        <div id="snow-overlay" class="hidden"></div>
+    <!-- canvas fx layers -->
+    <canvas id="particleCanvas"></canvas>
+    <canvas id="glitchCanvas"></canvas>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Profile Block -->
-            <div id="profile-block">
-                <div class="profile-header">
-                    <div class="profile-container">
-                        <img src="assets/anime.gif" alt="Profile" class="profile-picture">
-                    </div>
-                    <div class="profile-info">
-                        <h1 id="profile-name">@opsec</h1>
-                        <div class="opsec-tag">opsec warrior</div>
-                        <p id="profile-bio">Cyber security enthusiast • Full-stack developer • Open-source contributor</p>
-                    </div>
+    <!-- main UI panel -->
+    <div class="glass-panel" id="mainPanel">
+        <div class="profile-inner">
+            <div class="profile-flex">
+                <div class="avatar-wrapper">
+                    <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExY3F5eWJibnJkeW5nYXRzY3Vwa2NudmVwbWZ6Nmd6cmJneWg4aHBpZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7abB06u9bNzA8LC8/giphy.gif" alt="profile">
                 </div>
-
-                <div class="bio-separator"></div>
-
-                <div class="social-links">
-                    <a href="https://discord.gg/usercentral" target="_blank" class="social-link discord">
-                        <svg class="social-icon" viewBox="0 0 24 24" fill="none">
-                            <path d="M20.5 5.5C18.5 4.5 16.4 4 14.3 4C14 4 13.7 4 13.4 4C13.1 4 12.9 4 12.6 4.1C12.4 4.1 12.1 4.2 11.9 4.2C11.7 4.3 11.5 4.4 11.3 4.5C11.1 4.6 11 4.7 10.8 4.9C10.7 5 10.5 5.1 10.4 5.3C10.3 5.4 10.2 5.6 10.1 5.8C10 6 9.9 6.2 9.9 6.4C9.8 6.7 9.8 6.9 9.8 7.2C9.8 7.4 9.8 7.7 9.9 7.9C10 8.1 10.1 8.3 10.2 8.5C10.3 8.7 10.5 8.9 10.7 9C10.9 9.1 11.1 9.2 11.3 9.3C11.6 9.4 11.8 9.4 12.1 9.4C12.4 9.4 12.7 9.4 13 9.3C13.2 9.2 13.5 9.1 13.7 8.9C13.9 8.8 14.1 8.6 14.3 8.4C14.5 8.2 14.7 8 14.9 7.8C15.1 7.6 15.3 7.4 15.4 7.1C15.6 6.9 15.7 6.7 15.8 6.4C15.9 6.2 16 5.9 16 5.7C16 5.5 16 5.2 15.9 5C15.8 4.8 15.7 4.6 15.6 4.4C15.5 4.2 15.3 4 15.1 3.9C14.9 3.8 14.7 3.7 14.5 3.6C14.2 3.5 13.9 3.5 13.6 3.5C13.3 3.5 13 3.5 12.7 3.6C12.4 3.6 12.1 3.7 11.8 3.8C11.6 3.9 11.3 4 11.1 4.1C10.9 4.2 10.7 4.4 10.5 4.5C10.3 4.7 10.1 4.9 10 5.1C9.9 5.3 9.8 5.5 9.7 5.8C9.6 6 9.6 6.3 9.6 6.6C9.6 6.9 9.6 7.2 9.7 7.5C9.8 7.8 9.9 8.1 10.1 8.4C10.3 8.7 10.5 8.9 10.8 9.1C11.1 9.3 11.4 9.4 11.7 9.5C12 9.6 12.3 9.7 12.7 9.7C13 9.7 13.3 9.7 13.6 9.6C13.9 9.5 14.2 9.4 14.5 9.3C14.8 9.2 15.1 9 15.3 8.8C15.6 8.6 15.8 8.4 16 8.2C16.2 8 16.4 7.7 16.5 7.4C16.7 7.1 16.8 6.8 16.9 6.5C17 6.2 17 5.9 17 5.6C17 5.3 17 5 16.9 4.7C16.8 4.4 16.7 4.2 16.5 4C16.3 3.8 16.1 3.6 15.9 3.4C15.7 3.3 15.4 3.2 15.2 3.1C14.9 3 14.6 3 14.3 3C14 3 13.7 3 13.4 3.1C13.1 3.1 12.8 3.2 12.5 3.3C12.3 3.4 12 3.5 11.8 3.6C11.6 3.7 11.4 3.9 11.2 4.1C11 4.3 10.8 4.5 10.7 4.7C10.6 4.9 10.5 5.1 10.4 5.4C10.3 5.6 10.3 5.9 10.3 6.2C10.3 6.5 10.3 6.8 10.4 7.1C10.5 7.4 10.6 7.7 10.8 8C11 8.3 11.2 8.5 11.5 8.7C11.8 8.9 12.1 9.1 12.4 9.2C12.7 9.3 13.1 9.4 13.4 9.4C13.7 9.4 14.1 9.4 14.4 9.3C14.7 9.2 15 9.1 15.3 9C15.6 8.9 15.9 8.7 16.1 8.5C16.4 8.3 16.6 8.1 16.8 7.9C17 7.7 17.2 7.4 17.3 7.2C17.4 7 17.5 6.7 17.6 6.5C17.7 6.3 17.7 6 17.8 5.8C17.8 5.6 17.8 5.4 17.8 5.2C17.8 5 17.8 4.8 17.7 4.6C17.6 4.4 17.5 4.2 17.4 4C17.3 3.8 17.2 3.6 17 3.5C16.8 3.4 16.6 3.3 16.4 3.2C16.2 3.1 16 3 15.7 3C15.5 3 15.2 3 15 3.1C14.8 3.1 14.5 3.2 14.3 3.3C14.1 3.4 13.9 3.5 13.7 3.6C13.5 3.7 13.3 3.9 13.1 4.1C12.9 4.3 12.8 4.5 12.7 4.7C12.6 4.9 12.5 5.1 12.4 5.4C12.3 5.6 12.3 5.9 12.3 6.2C12.3 6.5 12.3 6.8 12.4 7.1C12.5 7.4 12.6 7.7 12.8 8C13 8.3 13.2 8.5 13.5 8.7C13.8 8.9 4.1 9.1 4.4 9.2C4.7 9.3 5.1 9.4 5.4 9.4C5.7 9.4 6.1 9.4 6.4 9.3C6.7 9.2 7 9.1 7.3 9C7.6 8.9 7.9 8.7 8.1 8.5C8.4 8.3 8.6 8.1 8.8 7.9C9 7.7 9.2 7.4 9.3 7.2C9.4 7 9.5 6.7 9.6 6.5C9.7 6.3 9.7 6 9.8 5.8C9.8 5.6 9.8 5.4 9.8 5.2C9.8 5 9.8 4.8 9.7 4.6C9.6 4.4 9.5 4.2 9.4 4C9.3 4.8 9.2 4.6 9 4.5C8.8 4.4 8.6 4.3 8.4 4.2C8.2 4.1 8 4 7.7 4C7.5 4 7.2 4 7 4.1C6.8 4.1 6.5 4.2 6.3 4.3C6.1 4.4 5.9 4.5 5.7 4.6C5.5 4.7 5.3 4.9 5.1 5.1C4.9 5.3 4.8 5.5 4.7 5.7C4.6 5.9 4.5 6.1 4.4 6.4C4.3 6.6 4.3 6.9 4.3 7.2C4.3 7.5 4.3 7.8 4.4 8.1C4.5 8.4 4.6 8.7 4.8 9C5 9.3 5.2 9.5 5.5 9.7C5.8 9.9 6.1 10.1 6.4 10.2C6.7 10.3 7.1 10.4 7.4 10.4C7.7 10.4 8.1 10.4 8.4 10.3C8.7 10.2 9 10.1 9.3 10C9.6 9.9 9.9 9.7 10.2 9.5C10.5 9.3 10.7 9.1 10.9 8.9C11.1 8.7 11.3 8.5 11.5 8.3C11.7 8.1 11.8 7.9 12 7.7C12.1 7.5 12.2 7.3 12.3 7.1C12.4 6.9 12.5 6.7 12.5 6.5Z" fill="currentColor"/>
-                            <path d="M9.5 12.5C8.5 11.5 7.4 11 6.3 11C6 11 5.7 11 5.4 11C5.1 11 4.9 11 4.6 11.1C4.4 11.1 4.1 11.2 3.9 11.2C3.7 11.3 3.5 11.4 3.3 11.5C3.1 11.6 3 11.7 2.8 11.9C2.7 12 2.5 12.1 2.4 12.3C2.3 12.4 2.2 12.6 2.1 12.8C2 13 1.9 13.2 1.9 13.4C1.8 13.7 1.8 13.9 1.8 14.2C1.8 14.4 1.8 14.7 1.9 14.9C2 15.1 2.1 15.3 2.2 15.5C2.3 15.7 2.5 15.9 2.7 16C2.9 16.1 3.1 16.2 3.3 16.3C3.6 16.4 3.8 16.4 4.1 16.4C4.4 16.4 4.7 16.4 5 16.3C5.2 16.2 5.5 16.1 5.7 15.9C5.9 15.8 6.1 15.6 6.3 15.4C6.5 15.2 6.7 15 6.9 14.8C7.1 14.6 7.3 14.4 7.4 14.1C7.6 13.9 7.7 13.7 7.8 13.4C7.9 13.2 8 12.9 8 12.7C8 12.5 8 12.2 7.9 12C7.8 11.8 7.7 11.6 7.6 11.4C7.5 11.2 7.3 11 7.1 10.9C6.9 10.8 6.7 10.7 6.5 10.6C6.2 10.5 5.9 10.5 5.6 10.5C5.3 10.5 5 10.5 4.7 10.6C4.4 10.6 4.1 10.7 3.8 10.8C3.6 10.9 3.3 11 3.1 11.1C2.9 11.2 2.7 11.4 2.5 11.5C2.3 11.7 2.1 11.9 2 12.1C1.9 12.3 1.8 12.5 1.7 12.8C1.6 13 1.6 13.3 1.6 13.6C1.6 13.9 1.6 14.2 1.7 14.5C1.8 14.8 1.9 15.1 2.1 15.4C2.3 15.7 2.5 15.9 2.8 16.1C3.1 16.3 3.4 16.4 3.7 16.5C4 16.6 4.3 16.7 4.7 16.7C5 16.7 5.3 16.7 5.6 16.6C5.9 16.5 6.2 16.4 6.5 16.3C6.8 16.2 7.1 16 7.3 15.8C7.6 15.6 7.8 15.4 8 15.2C8.2 15 8.4 14.7 8.5 14.4C8.7 14.1 8.8 13.8 8.9 13.5C9 13.2 9 12.9 9 12.6C9 12.3 9 12 8.9 11.7C8.8 11.4 8.7 11.2 8.5 11C8.3 10.8 8.1 10.6 7.9 10.4C7.7 10.3 7.4 10.2 7.2 10.1C6.9 10 6.6 10 6.3 10C6 10 5.7 10 5.4 10.1C5.1 10.1 4.8 10.2 4.5 10.3C4.3 10.4 4 10.5 3.8 10.6C3.6 10.7 3.4 10.9 3.2 11.1C3 11.3 2.8 11.5 2.7 11.7C2.6 11.9 2.5 12.1 2.4 12.4C2.3 12.6 2.3 12.9 2.3 13.2C2.3 13.5 2.3 13.8 2.4 14.1C2.5 14.4 2.6 14.7 2.8 15C3 15.3 3.2 15.5 3.5 15.7C3.8 15.9 4.1 16.1 4.4 16.2C4.7 16.3 5.1 16.4 5.4 16.4C5.7 16.4 6.1 16.4 6.4 16.3C6.7 16.2 7 16.1 7.3 16C7.6 15.9 7.9 15.7 8.1 15.5C8.4 15.3 8.6 15.1 8.8 14.9C9 14.7 9.2 14.4 9.3 14.2C9.4 14 9.5 13.7 9.6 13.5C9.7 13.3 9.7 13 9.8 12.8C9.8 12.6 9.8 12.4 9.8 12.2C9.8 12 9.8 11.8 9.7 11.6C9.6 11.4 9.5 11.2 9.4 11C9.3 10.8 9.2 10.6 9 10.5C8.8 10.4 8.6 10.3 8.4 10.2C8.2 10.1 8 10 7.7 10C7.5 10 7.2 10 7 10.1C6.8 10.1 6.5 10.2 6.3 10.3C6.1 10.4 5.9 10.5 5.7 10.6C5.5 10.7 5.3 10.9 5.1 11.1C4.9 11.3 4.8 11.5 4.7 11.7C4.6 11.9 4.5 12.1 4.4 12.4C4.3 12.6 4.3 12.9 4.3 13.2C4.3 13.5 4.3 13.8 4.4 14.1C4.5 14.4 4.6 14.7 4.8 15C5 15.3 5.2 15.5 5.5 15.7C5.8 15.9 6.1 16.1 6.4 16.2C6.7 16.3 7.1 16.4 7.4 16.4C7.7 16.4 8.1 16.4 8.4 16.3C8.7 16.2 9 16.1 9.3 16C9.6 15.9 9.9 15.7 10.2 15.5C10.5 15.3 10.7 15.1 10.9 14.9C11.1 14.7 11.3 14.5 11.5 14.3C11.7 14.1 11.8 13.9 12 13.7C12.1 13.5 12.2 13.3 12.3 13.1C12.4 12.9 12.5 12.7 12.5 12.5Z" fill="currentColor"/>
-                        </svg>
-                    </a>
-                    
-                    <a href="https://www.tiktok.com/@rdm.sxin" target="_blank" class="social-link tiktok">
-                        <svg class="social-icon" viewBox="0 0 24 24" fill="none">
-                            <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" fill="currentColor"/>
-                        </svg>
-                    </a>
-                </div>
-
-                <div class="profile-footer">
-                    <div class="visitor-counter">
-                        <svg class="visitor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                        </svg>
-                        <span id="visitor-count">1,024</span>
-                    </div>
+                <div class="info">
+                    <h1>@opsec</h1>
+                    <div class="badge">⚡ opsec warrior</div>
+                    <div class="bio-text">cyber security • full-stack • zero-day mindset</div>
                 </div>
             </div>
 
-            <!-- Skills Block -->
-            <div id="skills-block" class="hidden">
-                <h2 class="skills-title">Programming Skills</h2>
-                <div class="skill">
-                    <div class="skill-header">
-                        <div class="skill-name">
-                            <img src="assets/python.png" alt="Python" class="skill-icon">
-                            <span>Python</span>
-                        </div>
-                        <span>87%</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div id="python-bar" class="skill-progress" style="background: linear-gradient(90deg, #306998, #4B8BBE);"></div>
-                    </div>
-                </div>
-                <div class="skill">
-                    <div class="skill-header">
-                        <div class="skill-name">
-                            <img src="assets/cpp.png" alt="C++" class="skill-icon">
-                            <span>C++</span>
-                        </div>
-                        <span>75%</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div id="cpp-bar" class="skill-progress" style="background: linear-gradient(90deg, #004482, #659AD2);"></div>
-                    </div>
-                </div>
-                <div class="skill">
-                    <div class="skill-header">
-                        <div class="skill-name">
-                            <img src="assets/csharp.png" alt="C#" class="skill-icon">
-                            <span>C#</span>
-                        </div>
-                        <span>80%</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div id="csharp-bar" class="skill-progress" style="background: linear-gradient(90deg, #178600, #239A3B);"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <div class="divider"></div>
 
-        <!-- Results Button -->
-        <div id="results-button-container" class="hidden">
-            <button id="results-theme">View Skills</button>
-        </div>
-
-        <!-- Controls Panel -->
-        <div class="controls-panel">
-            <div class="theme-selector">
-            </div>
-            
-            <div class="control-group">
-                <svg class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
-                </svg>
-                <input id="volume-slider" class="slider" type="range" min="0" max="1" step="0.01" value="0.3">
+            <div class="social-row">
+                <a href="https://discord.gg/usercentral" target="_blank" class="social-icon-link discord-link" style="color:#5865F2">
+                    <svg class="social-svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.8 19.8 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.7 18.7 0 0 0-5.487 0 12.1 12.1 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.8 19.8 0 0 0 3.68 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.1 13.1 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .382-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.382.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.8 19.8 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.06.06 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                </a>
+                <a href="https://www.tiktok.com/@rdm.sxin" target="_blank" class="social-icon-link tiktok-link" style="color:#ff0050">
+                    <svg class="social-svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                </a>
             </div>
 
-            <div class="control-group">
-                <svg class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                </svg>
-                <input id="transparency-slider" class="slider" type="range" min="0" max="1" step="0.01" value="0.7">
+            <div class="visitor-card">
+                <div class="counter">
+                    <span>👁️</span> <span id="visitorCount">9,842</span> <span>visitors</span>
+                </div>
+            </div>
+
+            <!-- skills block togglable -->
+            <div id="skillsWrapper" class="skills-panel hidden">
+                <div class="skills-title">
+                    <span>⎇</span> core competencies
+                </div>
+                <div class="skill-item">
+                    <div class="skill-header"><span>🐍 Python</span><span id="pythonPer">87%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" id="pythonFill" style="background:linear-gradient(90deg,#306998,#6ab0de)"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-header"><span>⚙️ C++</span><span id="cppPer">75%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" id="cppFill" style="background:linear-gradient(90deg,#004482,#5a9bd5)"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-header"><span>🔷 C#</span><span id="csPer">80%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" id="csFill" style="background:linear-gradient(90deg,#178600,#3cb371)"></div></div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: center; margin-top: 1rem;">
+                <button id="skillsToggle">▣ TOGGLE SKILLS</button>
             </div>
         </div>
     </div>
 
-    <!-- Audio Elements -->
-    <audio id="background-music" loop>
-        <source src="assets/Bitcoin.mp3" type="audio/mp3">
-    </audio>
-    <audio id="hacker-music" loop muted>
-        <source src="assets/Bitcoin.mp3" type="audio/mp3">
-    </audio>
-    <audio id="rain-music" loop muted>
-        <source src="assets/Bitcoin.mp3" type="audio/mp3">
-    </audio>
-    <audio id="anime-music" loop muted>
-        <source src="assets/Bitcoin.mp3" type="audio/mp3">
-    </audio>
-    <audio id="car-music" loop muted>
-        <source src="assets/Bitcoin.mp3" type="audio/mp3">
+    <!-- control dock -->
+    <div class="control-dock">
+        <div class="theme-buttons" id="themeGroup">
+            <div data-theme="neon" class="theme-dot active">N</div>
+            <div data-theme="hacker" class="theme-dot">H</div>
+            <div data-theme="rain" class="theme-dot">R</div>
+            <div data-theme="anime" class="theme-dot">A</div>
+            <div data-theme="car" class="theme-dot">C</div>
+        </div>
+        <div class="ctrl-group">
+            <span>🔊</span>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.25">
+        </div>
+        <div class="ctrl-group">
+            <span>🌀</span>
+            <input type="range" id="glitchSlider" min="0" max="1" step="0.02" value="0.3">
+        </div>
+    </div>
+
+    <!-- audio -->
+    <audio id="bgAudio" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- GSAP Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
-    <!-- Main Script -->
-    <script src="script.js"></script>
+    <script>
+        // DOM elements
+        const entryScreen = document.getElementById('entry-screen');
+        const mainPanel = document.getElementById('mainPanel');
+        const skillsWrapper = document.getElementById('skillsWrapper');
+        const skillsToggle = document.getElementById('skillsToggle');
+        const bgVideo = document.getElementById('bg-video');
+        const bgAudio = document.getElementById('bgAudio');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const glitchSlider = document.getElementById('glitchSlider');
+        const themeBtns = document.querySelectorAll('.theme-dot');
+        const visitorSpan = document.getElementById('visitorCount');
+        
+        let glitchIntensity = 0.3;
+        let particleCtx, glitchCtx, particleCanvas, glitchCanvas;
+        let animationFrame;
+        let particles = [];
+        
+        // init visitor count fake dynamic
+        let baseViews = 9842;
+        setInterval(() => {
+            baseViews += Math.floor(Math.random() * 3);
+            visitorSpan.innerText = baseViews.toLocaleString();
+        }, 8000);
+        
+        // ---------- canvas effects ----------
+        function initCanvas() {
+            particleCanvas = document.getElementById('particleCanvas');
+            glitchCanvas = document.getElementById('glitchCanvas');
+            particleCtx = particleCanvas.getContext('2d');
+            glitchCtx = glitchCanvas.getContext('2d');
+            
+            function resize() {
+                particleCanvas.width = window.innerWidth;
+                particleCanvas.height = window.innerHeight;
+                glitchCanvas.width = window.innerWidth;
+                glitchCanvas.height = window.innerHeight;
+                initParticles();
+            }
+            function initParticles() {
+                particles = [];
+                const count = Math.min(120, Math.floor(window.innerWidth / 12));
+                for(let i=0;i<count;i++) {
+                    particles.push({
+                        x: Math.random() * particleCanvas.width,
+                        y: Math.random() * particleCanvas.height,
+                        radius: Math.random() * 1.5 + 0.8,
+                        alpha: Math.random() * 0.5 + 0.2,
+                        vx: (Math.random() - 0.5) * 0.3,
+                        vy: (Math.random() - 0.5) * 0.2
+                    });
+                }
+            }
+            window.addEventListener('resize', resize);
+            resize();
+            
+            function drawParticles() {
+                if(!particleCtx) return;
+                particleCtx.clearRect(0,0, particleCanvas.width, particleCanvas.height);
+                particleCtx.fillStyle = '#0ff';
+                for(let p of particles) {
+                    particleCtx.globalAlpha = p.alpha * 0.6;
+                    particleCtx.beginPath();
+                    particleCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+                    particleCtx.fill();
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if(p.x < 0) p.x = particleCanvas.width;
+                    if(p.x > particleCanvas.width) p.x = 0;
+                    if(p.y < 0) p.y = particleCanvas.height;
+                    if(p.y > particleCanvas.height) p.y = 0;
+                }
+                requestAnimationFrame(drawParticles);
+            }
+            drawParticles();
+            
+            // glitch effect loop
+            function applyGlitch() {
+                if(!glitchCtx || glitchIntensity <= 0.02) {
+                    if(glitchCtx) glitchCtx.clearRect(0,0, glitchCanvas.width, glitchCanvas.height);
+                    requestAnimationFrame(applyGlitch);
+                    return;
+                }
+                glitchCtx.clearRect(0,0, glitchCanvas.width, glitchCanvas.height);
+                const blocks = Math.floor(glitchIntensity * 35);
+                for(let i=0;i<blocks;i++) {
+                    const y = Math.random() * glitchCanvas.height;
+                    const h = Math.random() * 30 + 8;
+                    const offsetX = (Math.random() - 0.5) * 25 * glitchIntensity;
+                    glitchCtx.fillStyle = `rgba(0,255,255,${Math.random() * 0.25})`;
+                    glitchCtx.fillRect(0, y, glitchCanvas.width, h);
+                    glitchCtx.fillStyle = `rgba(255,0,255,${Math.random() * 0.2})`;
+                    glitchCtx.fillRect(offsetX, y, glitchCanvas.width * 0.2, h);
+                }
+                requestAnimationFrame(applyGlitch);
+            }
+            applyGlitch();
+        }
+        
+        // skills progress animation
+        function animateSkills() {
+            const pythonFill = document.getElementById('pythonFill');
+            const cppFill = document.getElementById('cppFill');
+            const csFill = document.getElementById('csFill');
+            if(pythonFill) pythonFill.style.width = '87%';
+            if(cppFill) cppFill.style.width = '75%';
+            if(csFill) csFill.style.width = '80%';
+        }
+        
+        // theme logic + video / overlay color
+        const themes = {
+            neon: { video: 'https://assets.mixkit.co/videos/preview/mixkit-digital-circuit-animation-34871-large.mp4', borderColor: '#0ff', brightness: 0.6 },
+            hacker: { video: 'https://cdn.pixabay.com/vimeo/404214130/matrix-14650.mp4?width=640&expiry=1712353646&hash=...', fallback: true, borderColor: '#0f0', brightness: 0.5 },
+            rain: { video: 'https://assets.mixkit.co/videos/preview/mixkit-rain-on-window-4044-large.mp4', borderColor: '#87CEEB', brightness: 0.55 },
+            anime: { video: 'https://assets.mixkit.co/videos/preview/mixkit-night-city-with-neon-lights-1169-large.mp4', borderColor: '#ff66cc', brightness: 0.6 },
+            car: { video: 'https://assets.mixkit.co/videos/preview/mixkit-red-sports-car-on-night-road-3366-large.mp4', borderColor: '#ffa500', brightness: 0.55 }
+        };
+        
+        function setTheme(themeKey) {
+            const theme = themes[themeKey];
+            if(theme) {
+                if(theme.video) bgVideo.src = theme.video;
+                bgVideo.play().catch(e=>console.log);
+                bgVideo.style.filter = `brightness(${theme.brightness}) saturate(1.2)`;
+                document.documentElement.style.setProperty('--primary-glow', theme.borderColor);
+                mainPanel.style.borderColor = theme.borderColor;
+                const btns = document.querySelectorAll('.theme-dot');
+                btns.forEach(btn => {
+                    if(btn.getAttribute('data-theme') === themeKey) btn.classList.add('active');
+                    else btn.classList.remove('active');
+                });
+            }
+        }
+        
+        themeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const t = btn.getAttribute('data-theme');
+                setTheme(t);
+            });
+        });
+        
+        // entry screen removal
+        entryScreen.addEventListener('click', () => {
+            entryScreen.style.opacity = '0';
+            setTimeout(() => {
+                entryScreen.classList.add('hidden');
+                mainPanel.classList.add('visible');
+                bgAudio.volume = volumeSlider.value;
+                bgAudio.play().catch(e=>console.log);
+                gsap.from(mainPanel, { duration: 0.8, y: 30, opacity: 0, ease: "back.out(0.4)" });
+                animateSkills();
+                initCanvas();
+            }, 600);
+        });
+        
+        // volume control
+        volumeSlider.addEventListener('input', (e) => {
+            bgAudio.volume = parseFloat(e.target.value);
+        });
+        
+        glitchSlider.addEventListener('input', (e) => {
+            glitchIntensity = parseFloat(e.target.value);
+        });
+        
+        // toggle skills panel
+        skillsToggle.addEventListener('click', () => {
+            if(skillsWrapper.classList.contains('hidden')) {
+                skillsWrapper.classList.remove('hidden');
+                animateSkills();
+                skillsToggle.textContent = '▼ HIDE SKILLS';
+            } else {
+                skillsWrapper.classList.add('hidden');
+                skillsToggle.textContent = '▣ TOGGLE SKILLS';
+            }
+        });
+        
+        // cursor movement
+        const cursor = document.querySelector('.custom-cursor');
+        document.addEventListener('mousemove', (e) => {
+            if(cursor) {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            }
+        });
+        
+        document.body.classList.add('touch-device'); // disable cursor on touch
+        if(window.matchMedia("(pointer: fine)").matches) {
+            document.body.classList.remove('touch-device');
+        } else {
+            document.body.classList.add('touch-device');
+            if(cursor) cursor.style.display = 'none';
+        }
+        
+        // fallback for video sources if any error (avoid broken video)
+        bgVideo.onerror = () => {
+            bgVideo.src = 'https://assets.mixkit.co/videos/preview/mixkit-digital-circuit-animation-34871-large.mp4';
+        };
+        // set default neon
+        setTheme('neon');
+        // preload audio metadata
+        bgAudio.load();
+    </script>
 </body>
 </html>
